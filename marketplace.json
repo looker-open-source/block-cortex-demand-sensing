@@ -1,0 +1,24 @@
+{
+  "label": "Cortex Data Foundation for SAP - Demand Sensing Dashboards",
+  "category_label": "Models",
+  "branding": {
+    "image_uri": "https://marketplace-api.looker.com/block-icons/sap_icon.png",
+    },
+
+  "constants": {
+    "CONNECTION_NAME": {
+      "label": "Connection Name",
+      "value_constraint": "connection"
+    },
+    "Demand_Sensing_DATASET": { 
+      "label": "Demand Sensing Dataset"
+     },
+  },
+      "models": [
+        {
+            "name": "cortex_demand_sensing",
+            "connection_constant": "CONNECTION_NAME"
+        }
+    ]
+  
+}
