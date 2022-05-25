@@ -5,7 +5,6 @@ constant: CONNECTION_NAME {
 }
 
 constant: DATASET {
-  value: "`project`.DEMAND_SENSING_DATASET"
+  value: "project.DEMAND_SENSING_DATASET"
   export: override_required
 }
-

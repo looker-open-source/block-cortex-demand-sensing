@@ -97,7 +97,7 @@
   - name: Customer Name
     title: Customer Name
     type: field_filter
-    default_value: Bulls Eye
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -111,7 +111,7 @@
   - name: Ship To Location
     title: Ship To Location
     type: field_filter
-    default_value: Boston
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -152,8 +152,8 @@
     field: demand_sensing.impact_score
   - name: Date Range
     title: Date Range
-    type: field_filter
-    default_value: 2018/01/01 to 2022/03/01
+    type: date_filter
+    default_value: 90 days
     allow_multiple_values: true
     required: false
     ui_config:
