@@ -10,9 +10,15 @@
       "label": "Connection Name",
       "value_constraint": "connection"
     },
-    "Demand_Sensing_DATASET": { 
-      "label": "Demand Sensing Dataset"
-     },
+    "GCP_PROJECT": {
+      "label": "my_gcp_project (project_name)"
+    },
+    "REPORTING_DATASET": {
+      "label": "Reporting Dataset Name"
+    },
+    "CDC_PROCESSED_DATASET":{
+       "label": "CDC_PROCESSED Dataset Name"
+    },
   },
       "models": [
         {
