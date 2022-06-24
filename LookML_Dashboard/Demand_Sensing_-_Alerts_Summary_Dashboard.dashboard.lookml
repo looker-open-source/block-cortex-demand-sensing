@@ -3,16 +3,20 @@
   layout: newspaper
   preferred_viewer: dashboards-next
   description: ''
+  preferred_slug: G7KplpivR8TpPnKtIflDT4
   elements:
-  - title: ''
-    name: ''
+  - title: Untitled
+    name: Untitled
     model: cortex_demand_sensing
-    explore: demand_sensing
+    explore: demand_sensing_summary
     type: looker_grid
-    fields: [demand_sensing.product_name, demand_sensing.customer, demand_sensing.location,
-      demand_sensing.date_date, demand_sensing.alert_dashboard_link, demand_sensing.impact_score,
-      demand_sensing.thirteen_week_past_sales_volume, demand_sensing.fifty_two_past_sales_volume]
-    sorts: [demand_sensing.impact_score desc]
+    fields: [demand_sensing_summary.product_name, demand_sensing_summary.customer,
+      demand_sensing_summary.location, demand_sensing_summary.date_week, demand_sensing_summary.alert_dashboard_link,
+      demand_sensing_summary.impact_score, demand_sensing_summary.thirteen_week_past_sales_volume,
+      demand_sensing_summary.fifty_two_past_sales_volume]
+    sorts: [demand_sensing_summary.date_week desc, demand_sensing_summary.impact_score
+        desc]
+    limit: 500
     show_view_names: false
     show_row_numbers: true
     transpose: false
@@ -32,15 +36,10 @@
     show_totals: true
     show_row_totals: true
     truncate_header: false
-    series_labels:
-      demand_sensing.location: Ship To Location
-      demand_sensing.date_date: Date
-      demand_sensing.thirteen_week_past_sales_volume: 13 - Week Customer Sales
-      demand_sensing.fifty_two_past_sales_volume: 52 - Week Customer Sales
     conditional_formatting: [{type: along a scale..., value: !!null '', background_color: "#1A73E8",
         font_color: !!null '', color_application: {collection_id: 7c56cc21-66e4-41c9-81ce-a60e1c3967b2,
           palette_id: 56d0c358-10a0-4fd6-aa0b-b117bef527ab}, bold: false, italic: false,
-        strikethrough: false, fields: [demand_sensing.impact_score]}]
+        strikethrough: false, fields: [demand_sensing_summary.impact_score]}]
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_y_axis_labels: true
@@ -61,20 +60,17 @@
     label_density: 25
     x_axis_scale: auto
     y_axis_combined: true
-    ordering: none
-    show_null_labels: false
-    show_totals_labels: false
-    show_silhouette: false
-    totals_color: "#808080"
+    show_null_points: true
+    interpolation: linear
     defaults_version: 1
     series_types: {}
+    title_hidden: true
     listen:
-      Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
-      Ship To Location: demand_sensing.location
-      Date Range: demand_sensing.date_date
-      Alert Value: demand_sensing.alert_dashboard_link
-      Impact Score: demand_sensing.impact_score
+      Product Name: demand_sensing_summary.product_name
+      Customer Name: demand_sensing_summary.customer
+      Location: demand_sensing_summary.location
+      Week Range: demand_sensing_summary.date_week
+      Alert Type: demand_sensing_summary.alert_dashboard_link
     row: 0
     col: 0
     width: 24
@@ -89,11 +85,10 @@
     ui_config:
       type: dropdown_menu
       display: inline
-      options: []
     model: cortex_demand_sensing
-    explore: demand_sensing
+    explore: demand_sensing_summary
     listens_to_filters: []
-    field: demand_sensing.product_name
+    field: demand_sensing_summary.product_name
   - name: Customer Name
     title: Customer Name
     type: field_filter
@@ -103,13 +98,12 @@
     ui_config:
       type: dropdown_menu
       display: inline
-      options: []
     model: cortex_demand_sensing
-    explore: demand_sensing
+    explore: demand_sensing_summary
     listens_to_filters: []
-    field: demand_sensing.customer
-  - name: Ship To Location
-    title: Ship To Location
+    field: demand_sensing_summary.customer
+  - name: Location
+    title: Location
     type: field_filter
     default_value: Boston
     allow_multiple_values: true
@@ -117,43 +111,14 @@
     ui_config:
       type: dropdown_menu
       display: inline
-      options: []
     model: cortex_demand_sensing
-    explore: demand_sensing
+    explore: demand_sensing_summary
     listens_to_filters: []
-    field: demand_sensing.location
-  - name: Alert Value
-    title: Alert Value
+    field: demand_sensing_summary.location
+  - name: Week Range
+    title: Week Range
     type: field_filter
-    default_value: ''
-    allow_multiple_values: true
-    required: false
-    ui_config:
-      type: tag_list
-      display: popover
-      options: []
-    model: cortex_demand_sensing
-    explore: demand_sensing
-    listens_to_filters: []
-    field: demand_sensing.alert_dashboard_link
-  - name: Impact Score
-    title: Impact Score
-    type: field_filter
-    default_value: "[0,100]"
-    allow_multiple_values: true
-    required: false
-    ui_config:
-      type: range_slider
-      display: inline
-      options: []
-    model: cortex_demand_sensing
-    explore: demand_sensing
-    listens_to_filters: []
-    field: demand_sensing.impact_score
-  - name: Date Range
-    title: Date Range
-    type: field_filter
-    default_value: 2018/01/01 to 2022/03/01
+    default_value: after 104 weeks ago
     allow_multiple_values: true
     required: false
     ui_config:
@@ -161,6 +126,19 @@
       display: inline
       options: []
     model: cortex_demand_sensing
-    explore: demand_sensing
+    explore: demand_sensing_summary
     listens_to_filters: []
-    field: demand_sensing.date_date
+    field: demand_sensing_summary.date_week
+  - name: Alert Type
+    title: Alert Type
+    type: field_filter
+    default_value: ''
+    allow_multiple_values: true
+    required: false
+    ui_config:
+      type: dropdown_menu
+      display: inline
+    model: cortex_demand_sensing
+    explore: demand_sensing_summary
+    listens_to_filters: []
+    field: demand_sensing_summary.alert_dashboard_link
