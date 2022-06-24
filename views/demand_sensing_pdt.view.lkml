@@ -245,7 +245,7 @@ ON
   Grid.PostalCode=Weather.PostCode
   AND CalDate.Date=Weather.Date
 LEFT JOIN
-  `@{GCP_PROJECT}.@{REPORTING_DATASET}.CorrelationTable` CorrelationTable
+    ${correlation_table_pdt.SQL_TABLE_NAME} AS CorrelationTable
 ON
   Grid.Location=CorrelationTable.Location
   AND Grid.Product=CorrelationTable.product
