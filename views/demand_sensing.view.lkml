@@ -1,9 +1,294 @@
-# The name of this view in Looker is "Di Demand Shaping"
-
 view: demand_sensing {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: `@{DATASET}.DemandSensing`;;
+  sql_table_name: (WITH
+  CalDate AS (
+  SELECT
+    date,
+    EXTRACT (week
+    FROM
+      date) AS week
+  FROM
+    UNNEST(GENERATE_DATE_ARRAY(DATE_ADD(current_date(), INTERVAL -cast({{ _user_attributes['years_of_past_data'] }} as INT64) YEAR), DATE_ADD(current_date(), INTERVAL 13 WEEK))) AS date ),
+  Grid AS (
+  SELECT
+    DISTINCT SalesOrders.MaterialNumber_MATNR AS Product,
+    SalesOrders.ShipToPartyItem_KUNNR AS Customer,
+    SalesOrders.ShipToPartyItemName_KUNNR AS CustomerName,
+    SalesOrders.RequestedDeliveryDate_VDATU AS Date,
+    Customers.City_ORT01 AS Location,
+    Customers.PostalCode_PSTLZ AS PostalCode
+  FROM
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.SalesOrders` SalesOrders
+  LEFT JOIN
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` Customers
+  ON
+    SalesOrders.Client_MANDT=Customers.Client_MANDT
+    AND SalesOrders.ShipToPartyItem_KUNNR=Customers.CustomerNumber_KUNNR
+  WHERE
+    SalesOrders.Client_MANDT = '{{ _user_attributes['client_id'] }}'
+  UNION DISTINCT
+  SELECT
+    DemandForecast.CatalogItemID AS Product,
+    DemandForecast.CustomerId AS Customer,
+    CustomersMD.Name1_NAME1 AS CustomerName,
+    DemandForecast.ForecastDate AS Date,
+    CustomersMD.City_ORT01 AS Location,
+    CustomersMD.PostalCode_PSTLZ AS PostalCode
+  FROM
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.DemandForecast`DemandForecast
+    INNER JOIN `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` CustomersMD
+  ON CustomersMD.CustomerNumber_KUNNR=DemandForecast.CustomerId
+and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
+  Sales AS (
+  SELECT
+    SalesOrders.Client_MANDT AS Client_MANDT,
+    SalesOrders.MaterialNumber_MATNR AS Product,
+    SalesOrders.RequestedDeliveryDate_VDATU AS Date,
+    SalesOrders.ShipToPartyItem_KUNNR AS Customer,
+    SalesOrders.ShipToPartyItemName_KUNNR AS CustomerName,
+    SalesOrders.CumulativeOrderQuantity_KWMENG AS SalesOrderQuantity,
+    Customers.City_ORT01 AS Location,
+    Customers.CountryKey_LAND1 AS Country,
+    Customers.PostalCode_PSTLZ AS PostalCode,
+    SUM(SalesOrders.CumulativeOrderQuantity_KWMENG) OVER(PARTITION BY SalesOrders.MaterialNumber_MATNR ORDER BY SalesOrders.RequestedDeliveryDate_VDATU ASC ROWS 13 PRECEDING) AS Past13WeekSales,
+    SUM(SalesOrders.CumulativeOrderQuantity_KWMENG) OVER(PARTITION BY SalesOrders.MaterialNumber_MATNR ORDER BY SalesOrders.RequestedDeliveryDate_VDATU ASC ROWS 52 PRECEDING) AS Past52WeekSales,
+  FROM
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.SalesOrders` SalesOrders
+  LEFT JOIN
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` Customers
+  ON
+    SalesOrders.Client_MANDT=Customers.Client_MANDT
+    AND SalesOrders.ShipToPartyItem_KUNNR=Customers.CustomerNumber_KUNNR
+  WHERE
+    SalesOrders.Client_MANDT='{{ _user_attributes['client_id'] }}' ),
+  Forecast AS (
+  SELECT
+    DemandForecast.CatalogItemID AS Product,
+    DemandForecast.ForecastDate AS Date,
+    DemandForecast.CustomerId AS Customer,
+    DemandForecast.ForecastQuantity AS Sales,
+    CustomersMD.City_ORT01 AS Location,
+    DemandForecast.ForecastQuantityLowerBound,
+    DemandForecast.ForecastQuantityUpperBound
+  FROM
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.DemandForecast` DemandForecast
+    INNER JOIN `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` CustomersMD
+  ON CustomersMD.CustomerNumber_KUNNR=DemandForecast.CustomerId
+and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
+
+  DemandPlan AS (
+  SELECT
+    DemandPlan.MaterialNumber AS Product,
+    DemandPlan.WeekStart AS Date,
+    DemandPlan.CustomerId AS Customer,
+    DemandPlan.DemandPlan AS Sales,
+    CustomersMd.City_ORT01 AS Location,
+  FROM
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.DemandPlan` DemandPlan
+
+INNER JOIN `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` CustomersMD
+
+ON CustomersMD.CustomerNumber_KUNNR=DemandPlan.CustomerId
+and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}' ),
+
+  Weather AS(
+SELECT
+Weather.MaxTemp,
+Weather.MinTemp,
+Weather.Country,
+Weather.PostCode,
+Weather.Date,
+Weather.AvgMaxTemp,
+Weather.AvgMinTemp,
+IF
+    (COUNT(CASE
+          WHEN (MaxTemp>AvgMaxTemp) THEN 1
+      END
+        ) OVER (PARTITION BY EXTRACT(year FROM Weather.Date),
+        EXTRACT(week
+        FROM
+          Weather.Date),
+        Weather.PostCode)>=2,
+      TRUE,
+      FALSE) AS HeatWave,
+  IF
+    (COUNT(CASE
+          WHEN (MinTemp<AvgMinTemp) THEN 1
+      END
+        ) OVER (PARTITION BY EXTRACT(year FROM Weather.Date),
+        EXTRACT(week
+        FROM
+          Weather.Date),
+        Weather.PostCode)>=2,
+      TRUE,
+      FALSE) AS ColdFront
+From
+(SELECT
+  max_temp  MaxTemp,
+  min_temp  MinTemp,
+  country Country,
+  postcode PostCode,
+  date Date,
+  AVG(max_temp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMaxTemp,
+  AVG(min_temp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMinTemp,
+FROM
+   @{GCP_PROJECT}.@{CDC_PROCESSED_DATASET}.weather_daily) As Weather),
+  Trends AS(
+  SELECT
+  WeekStart,
+  Week,
+  InterestOverTime,
+  Country,
+  HierarchyId,
+  SearchTerm,
+  HistoricalMin,
+  HistoricalMax,
+  ((InterestOverTime-HistoricalMin)/(HistoricalMax-HistoricalMin))*100 AS NormalizedScore,
+  AVG(((InterestOverTime-HistoricalMin)/(HistoricalMax-HistoricalMin))*100) OVER (PARTITION BY Country, HierarchyId )AS AvgNormalizedScore,
+  AVG(((InterestOverTime-HistoricalMin)/(HistoricalMax-HistoricalMin))*100) OVER (PARTITION BY Country, HierarchyId ORDER BY Trends.Week RANGE BETWEEN 300 PRECEDING AND CURRENT ROW )AS AvgNormalizedScoreFor10Months,
+FROM (
+  SELECT
+    WeekStart,
+    Week,
+    InterestOverTime,
+    Country,
+    HierarchyId,
+    SearchTerm,
+    MIN(InterestOverTime) OVER (PARTITION BY Country, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMin,
+    MAX(InterestOverTime) OVER (PARTITION BY Country, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMax
+  FROM
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.Trends`)Trends
+WHERE
+  HistoricalMin != HistoricalMax )
+SELECT
+  CalDate.Date,
+  CalDate.Week,
+  Grid.Product,
+  Sales.Client_MANDT,
+  materials.MaterialText_MAKTX AS ProductName,
+  Grid.CustomerName AS Customer,
+  Grid.Location,
+  Sales.Country,
+  Sales.SalesOrderQuantity AS Sales,
+  Sales.Past13WeekSales,
+  Sales.Past52WeekSales,
+  DemandPlan.Sales DemandPlan,
+  ROUND(Forecast.Sales,1) ForecastQuantity,
+  ROUND(Forecast.ForecastQuantityLowerBound, 1) AS ForecastQuantityLowerBound,
+  ROUND(Forecast.ForecastQuantityUpperBound, 1) AS ForecastQuantityUpperBound,
+  Trends.SearchTerm,
+  Trends.InterestOverTime,
+  ROUND(Weather.MaxTemp,1) AS AverageHighTemperature,
+  ROUND(Weather.MinTemp,1) AS AverageLowTemperature,
+  ROUND((Weather.MaxTemp+Weather.MinTemp)/2,1) AverageTemperature,
+  ROUND(AVG((Weather.MaxTemp+Weather.MinTemp)/2) OVER (PARTITION BY Grid.Location, Grid.Product ORDER BY CalDate.Date ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING ),1) AS MovingAverageTemperature,
+  PromotionCalendar.DiscountPercent,
+  PromotionCalendar.IsPromo,
+  IF(HolidayCalendar.HolidayDate IS NULL,0,1) AS IsHoliday,
+  ---ForecastOutsideStatisticalRange Impact Score
+IF
+  ((DemandPlan.Sales > Forecast.ForecastQuantityUpperBound)
+    OR (DemandPlan.Sales < Forecast.ForecastQuantityLowerBound),
+    ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
+    0) AS ForecastOutsideStatisticalRangeImpactScore,
+---HeatWave Impact Score
+IF(HeatWave IS TRUE,
+    IF(CorrValue>0.0
+    AND (LAG(DemandPlan.sales,1,0)OVER(PARTITION BY Sales.product, Sales.location, EXTRACT(week FROM CalDate.date)
+      ORDER BY EXTRACT(week FROM CalDate.date)ASC))>Forecast.ForecastQuantityUpperBound-0.05*Forecast.ForecastQuantityUpperBound,
+    ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
+    IF(CorrValue<0.0
+    And (LAG(DemandPlan.sales,1,0)OVER(PARTITION BY EXTRACT(week FROM CalDate.date)
+      ORDER BY EXTRACT(week FROM CalDate.date)ASC))<Forecast.ForecastQuantityLowerBound+0.05*Forecast.ForecastQuantityLowerBound,
+    ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),0)),0) AS HeatWaveImpactScore,
+
+---ColdFront Impact Score
+IF(ColdFront IS TRUE,
+    IF(CorrValue<0.0
+    AND (LAG(DemandPlan.sales,1,0)OVER(PARTITION BY Sales.product, Sales.location, EXTRACT(week FROM CalDate.date)
+      ORDER BY EXTRACT(week FROM CalDate.date)ASC))>Forecast.ForecastQuantityUpperBound-0.05*Forecast.ForecastQuantityUpperBound,
+    ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
+    IF(CorrValue>0.0
+    And (LAG(DemandPlan.sales,1,0)OVER(PARTITION BY EXTRACT(week FROM CalDate.date)
+      ORDER BY EXTRACT(week FROM CalDate.date)ASC))<Forecast.ForecastQuantityLowerBound+0.05*Forecast.ForecastQuantityLowerBound,
+    ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),0)),0) AS ColdFrontImpactScore,
+
+  --- PromoDiffrential Impact Score
+IF
+  ( PromotionCalendar.IsPromo=1
+    AND ((DemandPlan.Sales-Forecast.Sales)/DemandPlan.Sales) > 0.1,
+    ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
+    0) AS PromoDiffrentialImpactScore,
+  ---NonSeasonalTrends Impact Score
+IF
+  ((DemandPlan.Sales>Forecast.ForecastQuantityUpperBound
+      OR DemandPlan.Sales<Forecast.ForecastQuantityLowerBound)
+    AND Trends.Week BETWEEN Trends.Week
+    AND Trends.Week+3
+    AND ((ABS(NormalizedScore-AvgNormalizedScore)/ AvgNormalizedScore)*100 >0.25),
+    ROUND((ABS(NormalizedScore-AvgNormalizedScoreFor10Months)/ AvgNormalizedScoreFor10Months)*100,2),
+    0) AS NonSeasonalTrendsImpactScore,
+
+FROM
+  CalDate
+LEFT JOIN
+  Grid
+ON
+  CalDate.date = Grid.date
+LEFT JOIN
+  Sales
+ON
+  CalDate.date = Sales.date
+  AND Grid.product = Sales.product
+  AND Grid.customer = Sales.customer
+  AND Grid.location = Sales.location
+LEFT JOIN
+  Forecast
+ON
+  CalDate.date = Forecast.date
+  AND Grid.product = Forecast.product
+  AND Grid.customer = Forecast.customer
+  AND Grid.location = Forecast.location
+LEFT JOIN
+  DemandPlan
+ON
+  CalDate.date = DemandPlan.date
+  AND Grid.product = DemandPlan.product
+  AND Grid.customer = DemandPlan.customer
+  AND Grid.location = DemandPlan.location
+LEFT JOIN
+  Weather
+ON
+  Grid.PostalCode=Weather.PostCode
+  AND CalDate.Date=Weather.Date
+LEFT JOIN
+  `@{GCP_PROJECT}.@{REPORTING_DATASET}.CorrelationTable` CorrelationTable
+ON
+  Grid.Location=CorrelationTable.Location
+  AND Grid.Product=CorrelationTable.product
+LEFT JOIN
+  `@{GCP_PROJECT}.@{REPORTING_DATASET}.MaterialsMD` Materials
+ON
+  Grid.product =Materials.MaterialNumber_MATNR
+  AND Materials.Client_MANDT='{{ _user_attributes['client_id'] }}'
+  --AND Sales.Client_MANDT=Materials.Client_MANDT
+LEFT JOIN
+  Trends
+ON
+  CalDate.date=Trends.WeekStart
+  AND Materials.HierarchyText = Trends.SearchTerm
+  AND Sales.Country=Trends.Country
+LEFT JOIN
+  `@{GCP_PROJECT}.@{REPORTING_DATASET}.PromotionCalendar` PromotionCalendar
+ON
+  EXTRACT(Year FROM Grid.Date)=EXTRACT(Year FROM PromotionCalendar.StartDateOfWeek)
+  AND EXTRACT(week FROM Grid.Date)=EXTRACT(Week FROM PromotionCalendar.StartDateOfWeek)
+LEFT JOIN
+  `@{GCP_PROJECT}.@{REPORTING_DATASET}.HolidayCalendar` HolidayCalendar
+ON
+  Grid.Date = HolidayCalendar.HolidayDate)
+    ;;
   # No primary key is defined for this view. In order to join this view in an Explore,
   # define primary_key: yes on a dimension that has no repeated values.
 
@@ -22,7 +307,7 @@ view: demand_sensing {
   dimension: moving_average {
     type: number
     sql:Case
-        When CAST(${TABLE}.Date AS DATE) <= CAST ('2022-02-28' AS DATE)
+        When CAST(${TABLE}.Date AS DATE) <= CAST (Current_date() AS DATE)
         THEN ${TABLE}.MovingAverageTemperature
         End;;
   }
@@ -30,7 +315,7 @@ view: demand_sensing {
     type: average
     sql:
       CASE
-        WHEN CAST(${TABLE}.Date AS DATE) <= CAST ('2022-02-28' AS DATE)
+        WHEN CAST(${TABLE}.Date AS DATE) <= CAST (Current_date() AS DATE)
         THEN ${average_temperature}
         ELSE NULL
       END ;;
@@ -40,7 +325,7 @@ view: demand_sensing {
     type: average
     sql:
       CASE
-        WHEN CAST(${TABLE}.Date AS DATE) > CAST ('2022-02-28' AS DATE)
+        WHEN CAST(${TABLE}.Date AS DATE) > CAST (Current_date() AS DATE)
         THEN ${average_temperature}
         ELSE NULL
       END ;;
@@ -142,11 +427,16 @@ view: demand_sensing {
     type: number
     sql:
     CASE
-      WHEN CAST(${TABLE}.Date AS DATE) > CAST ('2022-02-28' AS DATE)
+      WHEN CAST(${TABLE}.Date AS DATE) > CAST (Current_date() AS DATE)
       THEN ${TABLE}.DemandPlan
     ELSE
       NULL
     END;;
+  }
+
+  dimension: demand_plan_past {
+    type: number
+    sql:${TABLE}.DemandPlan;;
   }
 
   dimension: forecast_quantity {
@@ -164,7 +454,7 @@ view: demand_sensing {
     type: sum
     sql:
     CASE
-      WHEN CAST(${TABLE}.Date AS DATE) <= CAST ('2022-02-28' AS DATE) and DATE_DIFF(CAST ('2022-02-28' AS DATE), Cast(${TABLE}.Date as Date), Day)<=91
+      WHEN CAST(${TABLE}.Date AS DATE) <= CAST (Current_date() AS DATE) and DATE_DIFF(CAST (Current_date() AS DATE), Cast(${TABLE}.Date as Date), Day)<=91
       THEN ${TABLE}.Sales
     ELSE
       NULL
@@ -175,7 +465,7 @@ view: demand_sensing {
     type: sum
     sql:
     CASE
-      WHEN ${TABLE}.RecordType='SalesOrders' and CAST(${TABLE}.Date AS DATE) <= CAST ('2022-02-28' AS DATE) and DATE_DIFF(CAST ('2022-02-28' AS DATE), Cast(${TABLE}.Date as Date), Day)<=366
+      WHEN ${TABLE}.RecordType='SalesOrders' and CAST(${TABLE}.Date AS DATE) <= CAST (Current_date() AS DATE) and DATE_DIFF(CAST (Current_date() AS DATE), Cast(${TABLE}.Date as Date), Day)<=366
       THEN ${TABLE}.Sales
     ELSE
       NULL
@@ -186,7 +476,7 @@ view: demand_sensing {
     type: average
     sql:
     CASE
-      WHEN CAST(${TABLE}.Date AS DATE) <= CAST ('2022-02-28' AS DATE)
+      WHEN CAST(${TABLE}.Date AS DATE) <= CAST (Current_date() AS DATE)
       THEN ${TABLE}.RetailUnitSold
     ELSE
       NULL
@@ -197,7 +487,7 @@ view: demand_sensing {
     type: average
     sql:
      CASE
-      WHEN CAST(${TABLE}.Date AS DATE) <= CAST ('2022-02-28' AS DATE)
+      WHEN CAST(${TABLE}.Date AS DATE) <= CAST (Current_date() AS DATE)
       THEN round(${order_quantity})
      ELSE
       NULL
@@ -208,7 +498,7 @@ view: demand_sensing {
     type: average
     sql:
     CASE
-      WHEN CAST(${TABLE}.Date AS DATE) > CAST ('2022-02-28' AS DATE)
+      WHEN CAST(${TABLE}.Date AS DATE) > CAST (Current_date() AS DATE)
       THEN round(${forecast_quantity})
     ELSE
       NULL
@@ -219,7 +509,7 @@ view: demand_sensing {
     type: average
     sql:
     CASE
-     WHEN CAST(${TABLE}.Date AS DATE) > CAST ('2022-02-28' AS DATE)
+     WHEN CAST(${TABLE}.Date AS DATE) > CAST (Current_date() AS DATE)
      THEN round(${forecast_quantity_lower_bound})
     ELSE
      NULL
@@ -229,7 +519,7 @@ view: demand_sensing {
     type: average
     sql:
     CASE
-     WHEN CAST(${TABLE}.Date AS DATE) > CAST ('2022-02-28' AS DATE)
+     WHEN CAST(${TABLE}.Date AS DATE) > CAST (Current_date() AS DATE)
      THEN round(${forecast_quantity_upper_bound})
     ELSE
      NULL
@@ -240,7 +530,7 @@ view: demand_sensing {
     type: sum
     sql:
       CASE
-        WHEN CAST(${TABLE}.Date AS DATE) > CAST ('2022-02-28' AS DATE) and DATE_DIFF(Cast(${TABLE}.Date as Date), CAST ('2022-02-28' AS DATE), Day)<=91
+        WHEN CAST(${TABLE}.Date AS DATE) > CAST (Current_date() AS DATE) and DATE_DIFF(Cast(${TABLE}.Date as Date), CAST (Current_date() AS DATE), Day)<=91
         THEN ${forecast_quantity}
       END ;;
     value_format_name: decimal_0
@@ -298,128 +588,4 @@ view: demand_sensing {
     type: count
     drill_fields: [product_name]
   }
-
-  dimension: impact_score {
-    type: number
-    sql: IF
-        (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.HeatWaveImpactScore,
-        IF
-          (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.ColdFront,
-          IF
-            (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.PromoDiffrentialImpactScore,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.NonSeasonalTrendsImpactScore,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore) ),
-          IF
-            (${TABLE}.ColdFront>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.ColdFront>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.ColdFront,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.NonSeasonalTrendsImpactScore,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore)) ),
-        IF
-          (${TABLE}.HeatWaveImpactScore>${TABLE}.ColdFront,
-          IF
-            (${TABLE}.HeatWaveImpactScore>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.HeatWaveImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.HeatWaveImpactScore,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.NonSeasonalTrendsImpactScore,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore) ),
-          IF
-            (${TABLE}.ColdFront>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.ColdFront>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.ColdFront,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                ${TABLE}.NonSeasonalTrendsImpactScore,
-                ${TABLE}.ForecastOutsideStatisticalRangeImpactScore)) ) ) ;;
-  }
-
-  dimension: alert_dashboard_link {
-    type: string
-    sql: IF
-        (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.HeatWaveImpactScore,
-        IF
-          (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.ColdFront,
-          IF
-            (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.PromoDiffrentialImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'Promo Differential',
-                'Forecast Outside Statistical Range'),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'NonSeasonal Trends',
-                'Forecast Outside Statistical Range') ),
-          IF
-            (${TABLE}.ColdFront>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.ColdFront>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'Cold Front',
-                'Forecast Outside Statistical Range'),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'NonSeasonal Trends',
-                'Forecast Outside Statistical Range')) ),
-        IF
-          (${TABLE}.HeatWaveImpactScore>${TABLE}.ColdFront,
-          IF
-            (${TABLE}.HeatWaveImpactScore>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.HeatWaveImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'Heat Wave',
-                'Forecast Outside Statistical Range'),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'NonSeasonal Trends',
-                'Forecast Outside Statistical Range') ),
-          IF
-            (${TABLE}.ColdFront>${TABLE}.NonSeasonalTrendsImpactScore,
-            IF
-              (${TABLE}.ColdFront>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'Cold Front',
-                'Forecast Outside Statistical Range'),
-            IF
-              (${TABLE}.NonSeasonalTrendsImpactScore>${TABLE}.ForecastOutsideStatisticalRangeImpactScore,
-                'NonSeasonal Trends',
-                'Forecast Outside Statistical Range')) ) ) ;;
-    #link: {
-      #label: "Detailed Dashboard"
-      #url: "/dashboards/cortex_demand_sensing::{{url_field._value}}?Product+Name={{ product_name._value }}&Customer={{customer._value}}&Ship+To+Location={{location._value}}"
-      #url: "/dashboards/cortex_demand_sensing::{{url_field._value}}?Product+Name={{ product_name._value }}&Customer={{ customer._value }}&Ship+To+Location={{location._value}}"
-           #dashboards/cortex_demand_sensing::demand_sensing__alerts_detail_dashboard_forecast_outside_statistical_range?Product+Name={{ product_name._value }}&Customer={{ customer._value }}&Ship+To+Location={{location._value}}
-      #icon_url: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/magnifying-glass-tilted-left_1f50d.png"
-   # }
-    html: <a href="/dashboards/cortex_demand_sensing::{{url_field._value}}?Product+Name={{ product_name._value }}&Customer={{ customer._value }}&Ship+To+Location={{location._value}}">{{value}}</a>;;
-  }
-
-  dimension: url_field {
-    hidden: yes
-    type: string
-    sql:
-         CASE
-          WHEN ${alert_dashboard_link} = 'Forecast Outside Statistical Range' THEN ('demand_sensing__alerts_detail_dashboard_forecast_outside_statistical_range')
-          WHEN ${alert_dashboard_link} = 'Promo Differential' THEN ('demand_sensing__alerts_detail_dashboard_promo_differential')
-          WHEN ${alert_dashboard_link} = 'Storm' THEN ('demand_sensing__alerts_detail_dashboard_temperature')
-          WHEN ${alert_dashboard_link} = 'Cold Front' THEN ('demand_sensing__alerts_detail_dashboard_temperature')
-          WHEN ${alert_dashboard_link} = 'Heat Wave' THEN ('demand_sensing__alerts_detail_dashboard_temperature')
-          WHEN ${alert_dashboard_link} = 'NonSeasonal Trends' THEN ('demand_sensing__alerts_detail_dashboard_trends')
-          ELSE Null
-        END ;;
-  }
-
 }
