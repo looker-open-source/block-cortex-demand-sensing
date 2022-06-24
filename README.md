@@ -22,9 +22,15 @@ The related LookML Block also leverages these same datasets.
 
 - **Connection**: In the manifest.lkml file, update the value of the CONNECTION_NAME 
 
-- **Dataset/Schema**: "Demand_Sensing_DATASET", Set to the name of the OTC dataset using `project_id.name_of_dataset`. For example, _mygcpprojectname.Demand_Sensing.
+- **GCP Project**: The GCP project name where the SAP reporting dataset resides in BigQuery (not project id).
 
-- **ClientId**: User Attribute: Create a user attribute called sap_client_mandt to controls which SAP Client(s) (MANDT) data each user is able to access
+- **Reporting Dataset**: The deployed Cortex Data Foundation _REPORTING dataset where the SAP views reside within the GCP BigQuery project.
+
+- **CDC_PROCESSED Dataset**: The deployed Cortex Data Foundation _CDC_PROCESSED dataset where the views reside within the GCP BigQuery project.
+
+- **ClientId**: User Attribute: Create a user attribute called client_id to controls which SAP Client(s) (MANDT) data each user is able to access
+
+- **Years_Past_Data**: User Attribute: Create a user attribute called years_of_past_data to controls upto which past years data each user is able to view on Dashboard
 
 - **(Optional)** Unhide additional dimensions and measure: Most dimensions and measures have been hidden to simplify reporting and data understanding. However should you find anything valuable missing, simply update the hidden parameters to No in the relevant views.
 
