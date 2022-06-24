@@ -28,5 +28,7 @@ persist_with: cortex_default_datagroup
 include: "/LookML_Dashboard/*.dashboard.lookml"
 
 explore:  demand_sensing {
-  sql_always_where: ${client_mandt} = "{{ _user_attributes['sap_client_mandt'] }}" ;;
+}
+
+explore:  demand_sensing_summary {
 }
