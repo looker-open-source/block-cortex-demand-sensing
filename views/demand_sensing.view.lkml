@@ -472,17 +472,6 @@ ON
     END;;
   }
 
-  measure: past_sales_quantity {
-    type: average
-    sql:
-    CASE
-      WHEN CAST(${TABLE}.Date AS DATE) <= CAST (Current_date() AS DATE)
-      THEN ${TABLE}.RetailUnitSold
-    ELSE
-      NULL
-    END;;
-  }
-
   measure: wholesale_quantity_measure {
     type: average
     sql:
@@ -558,16 +547,6 @@ ON
     sql:${TABLE}.Past52WeekSales;;
   }
 
-  dimension: retail_price {
-    type: number
-    sql: ${TABLE}.RetailPrice ;;
-  }
-
-  measure: retail_price_per_unit {
-    type: average
-    sql:  ${retail_price}*(1-${discount_percent}/100);;
-    value_format_name: decimal_2
-  }
 
   dimension: discount_percent {
     type: number
