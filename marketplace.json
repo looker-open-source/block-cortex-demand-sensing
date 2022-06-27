@@ -16,9 +16,6 @@
     "REPORTING_DATASET": {
       "label": "Reporting Dataset Name"
     },
-    "CDC_PROCESSED_DATASET":{
-       "label": "CDC_PROCESSED Dataset Name"
-    },
   },
       "models": [
         {
