@@ -1,4 +1,6 @@
-(WITH
+view: demand_sensing_pdt {
+  derived_table: {
+    sql:(WITH
   CalDate AS (
   SELECT
     date,
@@ -285,4 +287,7 @@ ON
 LEFT JOIN
   `@{GCP_PROJECT}.@{REPORTING_DATASET}.HolidayCalendar` HolidayCalendar
 ON
-  Grid.Date = HolidayCalendar.HolidayDate)
+  Grid.Date = HolidayCalendar.HolidayDate);;
+  interval_trigger: "3 hour"
+  }
+}
