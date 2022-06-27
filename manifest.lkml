@@ -14,3 +14,12 @@ constant: REPORTING_DATASET {
   export: override_required
   }
 
+constant: Client_ID: {
+   value: "Client ID"
+    export: override_required
+    }
+
+constant: years_of_past_data: {
+   value: "years_of_past_data"
+    export: override_required
+    }
