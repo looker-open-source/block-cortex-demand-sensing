@@ -15,7 +15,7 @@ The datasets required by this block can be obtained by following the installatio
 - [Google Cloud Cortex Framework](https://github.com/GoogleCloudPlatform/cortex-data-foundation)
 
 The related LookML Block also leverages these same datasets.
-- [Google Cloud Cortex Framework for SAP](https://github.com/llooker/cortex_data_foundation) 
+- [Google Cloud Cortex Framework for SAP](https://github.com/looker-open-source/block-cortex-sap/) 
 
 
 <h2><span style="color:#2d7eea">Required Customizations</span></h2>
