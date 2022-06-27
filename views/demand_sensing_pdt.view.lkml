@@ -31,7 +31,7 @@ view: demand_sensing_pdt {
     DemandForecast.CatalogItemID AS Product,
     DemandForecast.CustomerId AS Customer,
     CustomersMD.Name1_NAME1 AS CustomerName,
-    DemandForecast.ForecastDate AS Date,
+    DemandForecast.StartDateOfWeek AS Date,
     CustomersMD.City_ORT01 AS Location,
     CustomersMD.PostalCode_PSTLZ AS PostalCode
   FROM
@@ -64,7 +64,7 @@ and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
   Forecast AS (
   SELECT
     DemandForecast.CatalogItemID AS Product,
-    DemandForecast.ForecastDate AS Date,
+    DemandForecast.StartDateOfWeek AS Date,
     DemandForecast.CustomerId AS Customer,
     DemandForecast.ForecastQuantity AS Sales,
     CustomersMD.City_ORT01 AS Location,
@@ -282,8 +282,9 @@ ON
 LEFT JOIN
   `@{GCP_PROJECT}.@{REPORTING_DATASET}.PromotionCalendar` PromotionCalendar
 ON
-  EXTRACT(Year FROM Grid.Date)=EXTRACT(Year FROM PromotionCalendar.StartDateOfWeek)
-  AND EXTRACT(week FROM Grid.Date)=EXTRACT(Week FROM PromotionCalendar.StartDateOfWeek)
+  CalDate.date=PromotionCalendar.StartDateOfWeek
+  AND Grid.product=PromotionCalendar.CatalogItemId
+  AND Grid.customer=PromotionCalendar.Customerid
 LEFT JOIN
   `@{GCP_PROJECT}.@{REPORTING_DATASET}.HolidayCalendar` HolidayCalendar
 ON
