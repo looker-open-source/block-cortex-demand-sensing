@@ -26,9 +26,7 @@ The related LookML Block also leverages these same datasets.
 
 - **Reporting Dataset**: The deployed Cortex Data Foundation _REPORTING dataset where the SAP views reside within the GCP BigQuery project.
 
-- **CDC_PROCESSED Dataset**: The deployed Cortex Data Foundation _CDC_PROCESSED dataset where the views reside within the GCP BigQuery project.
-
-- **ClientId**: User Attribute: Create a user attribute called client_id to controls which SAP Client(s) (MANDT) data each user is able to access
+- **ClientId**: User Attribute: Create a user attribute called client_id to controls which SAP Client(s) (MANDT) data each user is able to access. If using test data default value should be 900.
 
 - **Years_Past_Data**: User Attribute: Create a user attribute called years_of_past_data to controls upto which past years data each user is able to view on Dashboard
 
