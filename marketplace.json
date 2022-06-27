@@ -15,6 +15,12 @@
     "REPORTING_DATASET": {
       "label": "Reporting Dataset Name"
     },
+    "Client_ID": {
+      "label": "Client ID"
+    },
+    "years_of_past_data": {
+      "label": "Years Of Past Data"
+    },
   },
       "models": [
         {
