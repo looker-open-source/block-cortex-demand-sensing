@@ -150,17 +150,34 @@ FROM
 FROM (
   SELECT
     WeekStart,
-    Week,
+    Extract( WEEK from WeekStart) as Week,
     InterestOverTime,
-    Country,
+    CountryCode as Country,
     HierarchyId,
-    SearchTerm,
-    MIN(InterestOverTime) OVER (PARTITION BY Country, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMin,
-    MAX(InterestOverTime) OVER (PARTITION BY Country, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMax
+    HierarchyText as SearchTerm,
+    MIN(InterestOverTime) OVER (PARTITION BY CountryCode, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMin,
+    MAX(InterestOverTime) OVER (PARTITION BY CountryCode, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMax
   FROM
     `@{GCP_PROJECT}.@{REPORTING_DATASET}.Trends`)Trends
 WHERE
-  HistoricalMin != HistoricalMax )
+  HistoricalMin != HistoricalMax ),
+  Materials as (Select
+    MaterialsMD.MaterialText_MAKTX,
+    MaterialsMD.MaterialNumber_MATNR,
+    MaterialsMD.Client_MANDT,
+    ProductHierarchyText.Description_vtext as HierarchyText
+    from
+    `@{GCP_PROJECT}.@{REPORTING_DATASET}.MaterialsMD` MaterialsMD
+    left JOIN
+(SELECT
+    distinct Hierarchy_Prodh,Client_MANDT,Description_vtext,Level_STUFE,Language_SPRAS
+  FROM
+   `@{GCP_PROJECT}.@{REPORTING_DATASET}.ProductHierarchiesMD`) ProductHierarchyText
+  ON left(MaterialsMD.ProductHierarchy_Prdha, 6 ) = ProductHierarchyText.Hierarchy_Prodh
+    AND MaterialsMD.Client_MANDT = ProductHierarchyText.Client_MANDT
+    AND ProductHierarchyText.Level_STUFE='3'
+    AND ProductHierarchyText.Language_SPRAS='E'
+  )
 SELECT
   CalDate.Date,
   CalDate.Week,
@@ -216,7 +233,7 @@ IF(ColdFront IS TRUE,
 
   --- PromoDiffrential Impact Score
 IF
-  ( PromotionCalendar.IsPromo=1
+  ( PromotionCalendar.IsPromo=true
     AND ((DemandPlan.Sales-Forecast.Sales)/DemandPlan.Sales) > 0.1,
     ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
     0) AS PromoDiffrentialImpactScore,
@@ -263,12 +280,12 @@ ON
   Grid.PostalCode=Weather.PostCode
   AND CalDate.Date=Weather.Date
 LEFT JOIN
-    ${correlation_table_pdt.SQL_TABLE_NAME} AS CorrelationTable
+  ${correlation_table_pdt.SQL_TABLE_NAME} AS CorrelationTable
 ON
   Grid.Location=CorrelationTable.Location
   AND Grid.Product=CorrelationTable.product
 LEFT JOIN
-  `@{GCP_PROJECT}.@{REPORTING_DATASET}.MaterialsMD` Materials
+  Materials
 ON
   Grid.product =Materials.MaterialNumber_MATNR
   AND Materials.Client_MANDT='{{ _user_attributes['client_id'] }}'
@@ -395,7 +412,7 @@ ON
 
   dimension: is_promo {
     type: number
-    sql: ${TABLE}.IsPromo ;;
+    sql: if(${TABLE}.InterestOverTime is null,0,${TABLE}.InterestOverTime) ;;
   }
 
   dimension: location {
