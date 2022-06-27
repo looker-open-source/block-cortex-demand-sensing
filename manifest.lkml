@@ -14,7 +14,3 @@ constant: REPORTING_DATASET {
   export: override_required
   }
 
-constant: CDC_PROCESSED_DATASET {
-  value: "my_cdc_processed_dataset (_DS_CDC_PROCESSED)"
-  export: override_required
-}
