@@ -10,7 +10,7 @@
       "value_constraint": "connection"
     },
     "GCP_PROJECT": {
-      "label": "my_gcp_project (project_name)"
+      "label": "GCP Project Name"
     },
     "REPORTING_DATASET": {
       "label": "Reporting Dataset Name"
