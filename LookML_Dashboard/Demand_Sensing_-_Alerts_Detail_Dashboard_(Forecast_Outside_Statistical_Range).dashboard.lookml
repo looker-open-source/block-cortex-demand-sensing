@@ -300,14 +300,13 @@
           {axisId: average_of_moving_average, id: average_of_moving_average, name: Historical
               Average Temperature}], showLabels: true, showValues: true, maxValue: !!null '',
         unpinAxis: false, tickDensity: default, tickDensityCustom: 5, type: linear},
-      {label: Quantity, orientation: right, series: [{axisId: demand_sensing.past_sales_quantity,
-            id: demand_sensing.past_sales_quantity, name: Retail Units Sold}, {axisId: demand_sensing.wholesale_quantity_measure,
+      {label: Quantity, orientation: right, series: [{axisId: demand_sensing.wholesale_quantity_measure,
             id: demand_sensing.wholesale_quantity_measure, name: Customer Units Sold},
           {axisId: average_of_demand_plan, id: average_of_demand_plan, name: Demand
               Plan}, {axisId: demand_sensing.forecast, id: demand_sensing.forecast,
             name: Forecast}, {axisId: demand_sensing.forecast_upper, id: demand_sensing.forecast_upper,
             name: Forecast Upper Bound}, {axisId: demand_sensing.forecast_lower, id: demand_sensing.forecast_lower,
-            name: Forecast Lower Bound}], showLabels: true, showValues: true, unpinAxis: true,
+            name: Forecast Lower Bound}], showLabels: true, showValues: true, unpinAxis: false,
         tickDensity: default, tickDensityCustom: 5, type: linear}]
     series_types:
       demand_sensing.temperature: column
@@ -348,7 +347,7 @@
     model: cortex_demand_sensing
     explore: demand_sensing
     type: looker_line
-    fields: [demand_sensing.date_week, average_of_demand_plan, demand_sensing.wholesale_quantity_measure,
+    fields: [demand_sensing.date_week, demand_sensing.wholesale_quantity_measure,
       average_of_is_promo, average_of_demand_plan_past, demand_sensing.forecast, demand_sensing.forecast_lower,
       demand_sensing.forecast_upper]
     fill_fields: [demand_sensing.date_week]
