@@ -14,7 +14,7 @@ constant: REPORTING_DATASET {
   export: override_required
   }
 
-constant: Client_ID: {
+constant: CLIENT: {
    value: "Client ID"
     export: override_required
     }
