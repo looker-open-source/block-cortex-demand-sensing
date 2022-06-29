@@ -84,104 +84,6 @@
     col: 5
     width: 19
     height: 9
-  - title: ''
-    name: ''
-    model: cortex_demand_sensing
-    explore: demand_sensing
-    type: marketplace_viz_multiple_value::multiple_value-marketplace
-    fields: [demand_sensing.thirteen_week_forecast, demand_sensing.thirteen_week_sales_volume,
-      demand_sensing.fifty_two_week_sales_volume]
-    limit: 500
-    hidden_fields: []
-    hidden_points_if_no: []
-    series_labels: {}
-    show_view_names: false
-    font_size_main: '12'
-    orientation: vertical
-    style_demand_sensing.thirteen_week_forecast: "#3A4245"
-    show_title_demand_sensing.thirteen_week_forecast: true
-    title_override_demand_sensing.thirteen_week_forecast: Sales Qty - 13 Week Forecast
-    title_placement_demand_sensing.thirteen_week_forecast: above
-    value_format_demand_sensing.thirteen_week_forecast: ''
-    style_demand_sensing.thirteen_week_sales_volume: "#3A4245"
-    show_title_demand_sensing.thirteen_week_sales_volume: true
-    title_override_demand_sensing.thirteen_week_sales_volume: Sales Qty - Last 13
-      Weeks
-    title_placement_demand_sensing.thirteen_week_sales_volume: above
-    value_format_demand_sensing.thirteen_week_sales_volume: ''
-    show_comparison_demand_sensing.thirteen_week_sales_volume: false
-    style_demand_sensing.fifty_two_week_sales_volume: "#3A4245"
-    show_title_demand_sensing.fifty_two_week_sales_volume: true
-    title_override_demand_sensing.fifty_two_week_sales_volume: Sales Qty- Last 52
-      Weeks
-    title_placement_demand_sensing.fifty_two_week_sales_volume: above
-    value_format_demand_sensing.fifty_two_week_sales_volume: ''
-    show_comparison_demand_sensing.fifty_two_week_sales_volume: false
-    style_di_demand_shaping.thirteen_week_forecast: "#3A4245"
-    show_title_di_demand_shaping.thirteen_week_forecast: true
-    title_override_di_demand_shaping.thirteen_week_forecast: 13-Week Forecast
-    title_placement_di_demand_shaping.thirteen_week_forecast: below
-    value_format_di_demand_shaping.thirteen_week_forecast: ''
-    style_di_demand_shaping.thirteen_week_sales_volume: "#3A4245"
-    show_title_di_demand_shaping.thirteen_week_sales_volume: true
-    title_override_di_demand_shaping.thirteen_week_sales_volume: 13-Week Customer
-      Sales Units
-    title_placement_di_demand_shaping.thirteen_week_sales_volume: below
-    value_format_di_demand_shaping.thirteen_week_sales_volume: ''
-    show_comparison_di_demand_shaping.thirteen_week_sales_volume: false
-    style_di_demand_shaping.fifty_two_week_sales_volume: "#3A4245"
-    show_title_di_demand_shaping.fifty_two_week_sales_volume: true
-    title_override_di_demand_shaping.fifty_two_week_sales_volume: 52-Week Customer
-      Sales Units
-    title_placement_di_demand_shaping.fifty_two_week_sales_volume: below
-    value_format_di_demand_shaping.fifty_two_week_sales_volume: ''
-    show_comparison_di_demand_shaping.fifty_two_week_sales_volume: false
-    x_axis_gridlines: false
-    y_axis_gridlines: true
-    show_y_axis_labels: true
-    show_y_axis_ticks: true
-    y_axis_tick_density: default
-    y_axis_tick_density_custom: 5
-    show_x_axis_label: true
-    show_x_axis_ticks: true
-    y_axis_scale_mode: linear
-    x_axis_reversed: false
-    y_axis_reversed: false
-    plot_size_by_field: false
-    trellis: ''
-    stacking: ''
-    limit_displayed_rows: false
-    legend_position: center
-    point_style: none
-    show_value_labels: false
-    label_density: 25
-    x_axis_scale: auto
-    y_axis_combined: true
-    ordering: none
-    show_null_labels: false
-    show_totals_labels: false
-    show_silhouette: false
-    totals_color: "#808080"
-    defaults_version: 0
-    series_types: {}
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: false
-    comparison_type: value
-    comparison_reverse_colors: false
-    show_comparison_label: true
-    enable_conditional_formatting: false
-    conditional_formatting_include_totals: false
-    conditional_formatting_include_nulls: false
-    y_axes: []
-    listen:
-      Product Name: demand_sensing.product_name
-      Customer: demand_sensing.customer
-      Ship To Location: demand_sensing.location
-    row: 0
-    col: 0
-    width: 5
-    height: 9
   - title: Forecast Outside Statistical Range
     name: Forecast Outside Statistical Range
     model: cortex_demand_sensing
@@ -445,6 +347,304 @@
     col: 16
     width: 8
     height: 7
+  - title: New Tile
+    name: New Tile
+    model: cortex_demand_sensing
+    explore: demand_sensing
+    type: single_value
+    fields: [demand_sensing.thirteen_week_forecast]
+    limit: 500
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: false
+    comparison_type: value
+    comparison_reverse_colors: false
+    show_comparison_label: true
+    enable_conditional_formatting: false
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    single_value_title: Sales Qty - 13 Week Forecast
+    hidden_fields: []
+    hidden_points_if_no: []
+    series_labels: {}
+    show_view_names: false
+    font_size_main: '12'
+    orientation: vertical
+    style_demand_sensing.thirteen_week_forecast: "#3A4245"
+    show_title_demand_sensing.thirteen_week_forecast: true
+    title_override_demand_sensing.thirteen_week_forecast: Sales Qty - 13 Week Forecast
+    title_placement_demand_sensing.thirteen_week_forecast: above
+    value_format_demand_sensing.thirteen_week_forecast: ''
+    style_demand_sensing.thirteen_week_sales_volume: "#3A4245"
+    show_title_demand_sensing.thirteen_week_sales_volume: true
+    title_override_demand_sensing.thirteen_week_sales_volume: Sales Qty - Last 13
+      Weeks
+    title_placement_demand_sensing.thirteen_week_sales_volume: above
+    value_format_demand_sensing.thirteen_week_sales_volume: ''
+    show_comparison_demand_sensing.thirteen_week_sales_volume: false
+    style_demand_sensing.fifty_two_week_sales_volume: "#3A4245"
+    show_title_demand_sensing.fifty_two_week_sales_volume: true
+    title_override_demand_sensing.fifty_two_week_sales_volume: Sales Qty - Last 52
+      Weeks
+    title_placement_demand_sensing.fifty_two_week_sales_volume: above
+    value_format_demand_sensing.fifty_two_week_sales_volume: ''
+    show_comparison_demand_sensing.fifty_two_week_sales_volume: false
+    style_di_demand_shaping.thirteen_week_forecast: "#3A4245"
+    show_title_di_demand_shaping.thirteen_week_forecast: true
+    title_override_di_demand_shaping.thirteen_week_forecast: 13-Week Forecast
+    title_placement_di_demand_shaping.thirteen_week_forecast: below
+    value_format_di_demand_shaping.thirteen_week_forecast: ''
+    style_di_demand_shaping.thirteen_week_sales_volume: "#3A4245"
+    show_title_di_demand_shaping.thirteen_week_sales_volume: true
+    title_override_di_demand_shaping.thirteen_week_sales_volume: 13-Week Customer
+      Sales Units
+    title_placement_di_demand_shaping.thirteen_week_sales_volume: below
+    value_format_di_demand_shaping.thirteen_week_sales_volume: ''
+    show_comparison_di_demand_shaping.thirteen_week_sales_volume: false
+    style_di_demand_shaping.fifty_two_week_sales_volume: "#3A4245"
+    show_title_di_demand_shaping.fifty_two_week_sales_volume: true
+    title_override_di_demand_shaping.fifty_two_week_sales_volume: 52-Week Customer
+      Sales Units
+    title_placement_di_demand_shaping.fifty_two_week_sales_volume: below
+    value_format_di_demand_shaping.fifty_two_week_sales_volume: ''
+    show_comparison_di_demand_shaping.fifty_two_week_sales_volume: false
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    show_y_axis_labels: true
+    show_y_axis_ticks: true
+    y_axis_tick_density: default
+    y_axis_tick_density_custom: 5
+    show_x_axis_label: true
+    show_x_axis_ticks: true
+    y_axis_scale_mode: linear
+    x_axis_reversed: false
+    y_axis_reversed: false
+    plot_size_by_field: false
+    trellis: ''
+    stacking: ''
+    limit_displayed_rows: false
+    legend_position: center
+    point_style: none
+    show_value_labels: false
+    label_density: 25
+    x_axis_scale: auto
+    y_axis_combined: true
+    ordering: none
+    show_null_labels: false
+    show_totals_labels: false
+    show_silhouette: false
+    totals_color: "#808080"
+    defaults_version: 1
+    series_types: {}
+    y_axes: []
+    listen:
+      Product Name: demand_sensing.product_name
+      Customer: demand_sensing.customer
+      Ship To Location: demand_sensing.location
+      Week Range: demand_sensing.date_date
+    row: 0
+    col: 0
+    width: 5
+    height: 3
+  - title: New Tile
+    name: New Tile (2)
+    model: cortex_demand_sensing
+    explore: demand_sensing
+    type: single_value
+    fields: [demand_sensing.thirteen_week_sales_volume]
+    limit: 500
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: false
+    comparison_type: value
+    comparison_reverse_colors: false
+    show_comparison_label: true
+    enable_conditional_formatting: false
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    single_value_title: Sales Qty - Last 13 Weeks
+    hidden_fields: []
+    hidden_points_if_no: []
+    series_labels: {}
+    show_view_names: false
+    font_size_main: '12'
+    orientation: vertical
+    style_demand_sensing.thirteen_week_forecast: "#3A4245"
+    show_title_demand_sensing.thirteen_week_forecast: true
+    title_override_demand_sensing.thirteen_week_forecast: Sales Qty - 13 Week Forecast
+    title_placement_demand_sensing.thirteen_week_forecast: above
+    value_format_demand_sensing.thirteen_week_forecast: ''
+    style_demand_sensing.thirteen_week_sales_volume: "#3A4245"
+    show_title_demand_sensing.thirteen_week_sales_volume: true
+    title_override_demand_sensing.thirteen_week_sales_volume: Sales Qty - Last 13
+      Weeks
+    title_placement_demand_sensing.thirteen_week_sales_volume: above
+    value_format_demand_sensing.thirteen_week_sales_volume: ''
+    show_comparison_demand_sensing.thirteen_week_sales_volume: false
+    style_demand_sensing.fifty_two_week_sales_volume: "#3A4245"
+    show_title_demand_sensing.fifty_two_week_sales_volume: true
+    title_override_demand_sensing.fifty_two_week_sales_volume: Sales Qty - Last 52
+      Weeks
+    title_placement_demand_sensing.fifty_two_week_sales_volume: above
+    value_format_demand_sensing.fifty_two_week_sales_volume: ''
+    show_comparison_demand_sensing.fifty_two_week_sales_volume: false
+    style_di_demand_shaping.thirteen_week_forecast: "#3A4245"
+    show_title_di_demand_shaping.thirteen_week_forecast: true
+    title_override_di_demand_shaping.thirteen_week_forecast: 13-Week Forecast
+    title_placement_di_demand_shaping.thirteen_week_forecast: below
+    value_format_di_demand_shaping.thirteen_week_forecast: ''
+    style_di_demand_shaping.thirteen_week_sales_volume: "#3A4245"
+    show_title_di_demand_shaping.thirteen_week_sales_volume: true
+    title_override_di_demand_shaping.thirteen_week_sales_volume: 13-Week Customer
+      Sales Units
+    title_placement_di_demand_shaping.thirteen_week_sales_volume: below
+    value_format_di_demand_shaping.thirteen_week_sales_volume: ''
+    show_comparison_di_demand_shaping.thirteen_week_sales_volume: false
+    style_di_demand_shaping.fifty_two_week_sales_volume: "#3A4245"
+    show_title_di_demand_shaping.fifty_two_week_sales_volume: true
+    title_override_di_demand_shaping.fifty_two_week_sales_volume: 52-Week Customer
+      Sales Units
+    title_placement_di_demand_shaping.fifty_two_week_sales_volume: below
+    value_format_di_demand_shaping.fifty_two_week_sales_volume: ''
+    show_comparison_di_demand_shaping.fifty_two_week_sales_volume: false
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    show_y_axis_labels: true
+    show_y_axis_ticks: true
+    y_axis_tick_density: default
+    y_axis_tick_density_custom: 5
+    show_x_axis_label: true
+    show_x_axis_ticks: true
+    y_axis_scale_mode: linear
+    x_axis_reversed: false
+    y_axis_reversed: false
+    plot_size_by_field: false
+    trellis: ''
+    stacking: ''
+    limit_displayed_rows: false
+    legend_position: center
+    point_style: none
+    show_value_labels: false
+    label_density: 25
+    x_axis_scale: auto
+    y_axis_combined: true
+    ordering: none
+    show_null_labels: false
+    show_totals_labels: false
+    show_silhouette: false
+    totals_color: "#808080"
+    defaults_version: 1
+    series_types: {}
+    y_axes: []
+    listen:
+      Product Name: demand_sensing.product_name
+      Customer: demand_sensing.customer
+      Ship To Location: demand_sensing.location
+      Week Range: demand_sensing.date_date
+    row: 3
+    col: 0
+    width: 5
+    height: 3
+  - title: New Tile
+    name: New Tile (3)
+    model: cortex_demand_sensing
+    explore: demand_sensing
+    type: single_value
+    fields: [demand_sensing.fifty_two_week_sales_volume]
+    sorts: [demand_sensing.fifty_two_week_sales_volume desc]
+    limit: 500
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: false
+    comparison_type: value
+    comparison_reverse_colors: false
+    show_comparison_label: true
+    enable_conditional_formatting: false
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    single_value_title: Sales Qty - Last 52 Weeks
+    hidden_fields: []
+    hidden_points_if_no: []
+    series_labels: {}
+    show_view_names: false
+    font_size_main: '12'
+    orientation: vertical
+    style_demand_sensing.thirteen_week_forecast: "#3A4245"
+    show_title_demand_sensing.thirteen_week_forecast: true
+    title_override_demand_sensing.thirteen_week_forecast: Sales Qty - 13 Week Forecast
+    title_placement_demand_sensing.thirteen_week_forecast: above
+    value_format_demand_sensing.thirteen_week_forecast: ''
+    style_demand_sensing.thirteen_week_sales_volume: "#3A4245"
+    show_title_demand_sensing.thirteen_week_sales_volume: true
+    title_override_demand_sensing.thirteen_week_sales_volume: Sales Qty - Last 13
+      Weeks
+    title_placement_demand_sensing.thirteen_week_sales_volume: above
+    value_format_demand_sensing.thirteen_week_sales_volume: ''
+    show_comparison_demand_sensing.thirteen_week_sales_volume: false
+    style_demand_sensing.fifty_two_week_sales_volume: "#3A4245"
+    show_title_demand_sensing.fifty_two_week_sales_volume: true
+    title_override_demand_sensing.fifty_two_week_sales_volume: Sales Qty - Last 52
+      Weeks
+    title_placement_demand_sensing.fifty_two_week_sales_volume: above
+    value_format_demand_sensing.fifty_two_week_sales_volume: ''
+    show_comparison_demand_sensing.fifty_two_week_sales_volume: false
+    style_di_demand_shaping.thirteen_week_forecast: "#3A4245"
+    show_title_di_demand_shaping.thirteen_week_forecast: true
+    title_override_di_demand_shaping.thirteen_week_forecast: 13-Week Forecast
+    title_placement_di_demand_shaping.thirteen_week_forecast: below
+    value_format_di_demand_shaping.thirteen_week_forecast: ''
+    style_di_demand_shaping.thirteen_week_sales_volume: "#3A4245"
+    show_title_di_demand_shaping.thirteen_week_sales_volume: true
+    title_override_di_demand_shaping.thirteen_week_sales_volume: 13-Week Customer
+      Sales Units
+    title_placement_di_demand_shaping.thirteen_week_sales_volume: below
+    value_format_di_demand_shaping.thirteen_week_sales_volume: ''
+    show_comparison_di_demand_shaping.thirteen_week_sales_volume: false
+    style_di_demand_shaping.fifty_two_week_sales_volume: "#3A4245"
+    show_title_di_demand_shaping.fifty_two_week_sales_volume: true
+    title_override_di_demand_shaping.fifty_two_week_sales_volume: 52-Week Customer
+      Sales Units
+    title_placement_di_demand_shaping.fifty_two_week_sales_volume: below
+    value_format_di_demand_shaping.fifty_two_week_sales_volume: ''
+    show_comparison_di_demand_shaping.fifty_two_week_sales_volume: false
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    show_y_axis_labels: true
+    show_y_axis_ticks: true
+    y_axis_tick_density: default
+    y_axis_tick_density_custom: 5
+    show_x_axis_label: true
+    show_x_axis_ticks: true
+    y_axis_scale_mode: linear
+    x_axis_reversed: false
+    y_axis_reversed: false
+    plot_size_by_field: false
+    trellis: ''
+    stacking: ''
+    limit_displayed_rows: false
+    legend_position: center
+    point_style: none
+    show_value_labels: false
+    label_density: 25
+    x_axis_scale: auto
+    y_axis_combined: true
+    ordering: none
+    show_null_labels: false
+    show_totals_labels: false
+    show_silhouette: false
+    totals_color: "#808080"
+    defaults_version: 1
+    series_types: {}
+    y_axes: []
+    listen:
+      Product Name: demand_sensing.product_name
+      Customer: demand_sensing.customer
+      Ship To Location: demand_sensing.location
+      Week Range: demand_sensing.date_date
+    row: 6
+    col: 0
+    width: 5
+    height: 3
   filters:
   - name: Product Name
     title: Product Name
