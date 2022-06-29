@@ -19,7 +19,7 @@ constant: CLIENT {
   export: override_required
 }
 
-constant: years_of_past_data: {
+constant: years_of_past_data {
    value: "years_of_past_data"
     export: override_required
     }
