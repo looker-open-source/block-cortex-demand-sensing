@@ -132,7 +132,7 @@ From
   AVG(max_temp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMaxTemp,
   AVG(min_temp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMinTemp,
 FROM
-   @{GCP_PROJECT}.@{CDC_PROCESSED_DATASET}.weather_daily) As Weather),
+   @{GCP_PROJECT}.@{REPORTING_DATASET}.weather_daily) As Weather),
   Trends AS(
   SELECT
   WeekStart,
