@@ -5,19 +5,19 @@ constant: CONNECTION_NAME {
 }
 
 constant: GCP_PROJECT {
-  value: "my_gcp_project (project_name)"
+  value: "GCP Project Name"
   export: override_required
 }
 
 constant: REPORTING_DATASET {
-  value: "my_reporting_dataset (_DS_REPORTING)"
+  value: "Reporting Dataset Name"
   export: override_required
-  }
+}
 
-constant: CLIENT: {
-   value: "Client ID"
-    export: override_required
-    }
+constant: CLIENT {
+  value: "Client ID"
+  export: override_required
+}
 
 constant: years_of_past_data: {
    value: "years_of_past_data"
