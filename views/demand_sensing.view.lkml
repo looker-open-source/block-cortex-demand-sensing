@@ -7,9 +7,9 @@ view: demand_sensing {
     date,
     EXTRACT (week
     FROM
-      date) AS week
+      date) AS week ${years_of_past_data}
   FROM
-    UNNEST(GENERATE_DATE_ARRAY(DATE_ADD(current_date(), INTERVAL -cast({{ _user_attributes['years_of_past_data'] }} as INT64) YEAR), DATE_ADD(current_date(), INTERVAL 13 WEEK))) AS date ),
+    UNNEST(GENERATE_DATE_ARRAY(DATE_ADD(current_date(), INTERVAL -cast({${years_of_past_data}} as INT64) YEAR), DATE_ADD(current_date(), INTERVAL 13 WEEK))) AS date ),
   Grid AS (
   SELECT
     DISTINCT SalesOrders.MaterialNumber_MATNR AS Product,
@@ -26,7 +26,7 @@ view: demand_sensing {
     SalesOrders.Client_MANDT=Customers.Client_MANDT
     AND SalesOrders.ShipToPartyItem_KUNNR=Customers.CustomerNumber_KUNNR
   WHERE
-    SalesOrders.Client_MANDT = '{{ _user_attributes['client_id'] }}'
+    SalesOrders.Client_MANDT = '{${Client_ID}}'
   UNION DISTINCT
   SELECT
     DemandForecast.CatalogItemID AS Product,
@@ -39,7 +39,7 @@ view: demand_sensing {
     `@{GCP_PROJECT}.@{REPORTING_DATASET}.DemandForecast`DemandForecast
     INNER JOIN `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` CustomersMD
   ON CustomersMD.CustomerNumber_KUNNR=DemandForecast.CustomerId
-and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
+and CustomersMD.Client_MANDT= ${Client_ID} ),
   Sales AS (
   SELECT
     SalesOrders.Client_MANDT AS Client_MANDT,
@@ -61,7 +61,7 @@ and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
     SalesOrders.Client_MANDT=Customers.Client_MANDT
     AND SalesOrders.ShipToPartyItem_KUNNR=Customers.CustomerNumber_KUNNR
   WHERE
-    SalesOrders.Client_MANDT='{{ _user_attributes['client_id'] }}' ),
+    SalesOrders.Client_MANDT= ${Client_ID} ),
   Forecast AS (
   SELECT
     DemandForecast.CatalogItemID AS Product,
@@ -75,7 +75,7 @@ and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
     `@{GCP_PROJECT}.@{REPORTING_DATASET}.DemandForecast` DemandForecast
     INNER JOIN `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` CustomersMD
   ON CustomersMD.CustomerNumber_KUNNR=DemandForecast.CustomerId
-and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
+and CustomersMD.Client_MANDT= ${Client_ID}),
 
   DemandPlan AS (
   SELECT
@@ -90,7 +90,7 @@ and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}'),
 INNER JOIN `@{GCP_PROJECT}.@{REPORTING_DATASET}.CustomersMD` CustomersMD
 
 ON CustomersMD.CustomerNumber_KUNNR=DemandPlan.CustomerId
-and CustomersMD.Client_MANDT='{{ _user_attributes['client_id'] }}' ),
+and CustomersMD.Client_MANDT= ${Client_ID} ),
 
   Weather AS(
 SELECT
@@ -288,7 +288,7 @@ LEFT JOIN
   Materials
 ON
   Grid.product =Materials.MaterialNumber_MATNR
-  AND Materials.Client_MANDT='{{ _user_attributes['client_id'] }}'
+  AND Materials.Client_MANDT= ${Client_ID}
   --AND Sales.Client_MANDT=Materials.Client_MANDT
 LEFT JOIN
   Trends
