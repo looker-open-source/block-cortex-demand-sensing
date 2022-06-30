@@ -118,8 +118,7 @@
     y_axes: [{label: '', orientation: left, series: [{axisId: average_of_interest_over_time,
             id: average_of_interest_over_time, name: Trend}], showLabels: true, showValues: true,
         unpinAxis: true, tickDensity: default, tickDensityCustom: 5, type: linear},
-      {label: !!null '', orientation: right, series: [{axisId: demand_sensing.past_sales_quantity,
-            id: demand_sensing.past_sales_quantity, name: Retail Units Sold}, {axisId: demand_sensing.wholesale_quantity_measure,
+      {label: !!null '', orientation: right, series: [ {axisId: demand_sensing.wholesale_quantity_measure,
             id: demand_sensing.wholesale_quantity_measure, name: Customer Units Sold},
           {axisId: average_of_demand_plan, id: average_of_demand_plan, name: Total
               Demand Plan}, {axisId: demand_sensing.forecast, id: demand_sensing.forecast,
@@ -138,7 +137,6 @@
     series_labels:
       average_of_interest_over_time: Trend
       average_of_demand_plan: Demand Plan
-      demand_sensing.past_sales_quantity: Retail Units Sold
       demand_sensing.wholesale_quantity_measure: Customer Units Sold
       demand_sensing.forecast_lower: Forecast Lower Bound
       demand_sensing.forecast_upper: Forecast Upper Bound
@@ -227,7 +225,6 @@
       average_of_demand_plan: Demand Plan
       average_of_moving_average: Historical Average Temperature
       demand_sensing.forecast_temperature: Temperature Forecast
-      demand_sensing.past_sales_quantity: Retail Units Sold
       demand_sensing.wholesale_quantity_measure: Customer Units Sold
       demand_sensing.forecast_upper: Forecast Upper Bound
       demand_sensing.forecast_lower: Forecast Lower Bound
@@ -257,15 +254,11 @@
     sorts: [demand_sensing.date_week desc]
     limit: 500
     column_limit: 50
-    dynamic_fields: [{measure: average_of_retail_price, based_on: demand_sensing.retail_price,
-        expression: '', label: Average of Retail Price, type: average, _kind_hint: measure,
-        _type_hint: number}, {measure: average_of_demand_plan, based_on: demand_sensing.demand_plan,
+    dynamic_fields: [ {measure: average_of_demand_plan, based_on: demand_sensing.demand_plan,
         expression: '', label: Average of Demand Plan, type: average, _kind_hint: measure,
         _type_hint: number}, {measure: average_of_is_promo, based_on: demand_sensing.is_promo,
         expression: '', label: Average of Is Promo, type: average, _kind_hint: measure,
-        _type_hint: number}, {measure: average_of_retail_price_2, based_on: demand_sensing.retail_price,
-        expression: '', label: Average of Retail Price, type: average, _kind_hint: measure,
-        _type_hint: number}, {measure: average_of_demand_plan_past, based_on: demand_sensing.demand_plan_past,
+        _type_hint: number} , {measure: average_of_demand_plan_past, based_on: demand_sensing.demand_plan_past,
         expression: '', label: Average of Demand Plan Past, type: average, _kind_hint: measure,
         _type_hint: number}]
     x_axis_gridlines: false
@@ -292,8 +285,7 @@
     y_axis_combined: true
     show_null_points: false
     interpolation: linear
-    y_axes: [{label: Quantity, orientation: left, series: [{axisId: demand_sensing.past_sales_quantity,
-            id: demand_sensing.past_sales_quantity, name: Retail Units Sold}, {axisId: average_of_demand_plan,
+    y_axes: [{label: Quantity, orientation: left, series: [ {axisId: average_of_demand_plan,
             id: average_of_demand_plan, name: Demand Plan}, {axisId: demand_sensing.wholesale_quantity_measure,
             id: demand_sensing.wholesale_quantity_measure, name: Customer Units Sold},
           {axisId: average_of_demand_plan_past, id: average_of_demand_plan_past, name: Average
@@ -301,11 +293,7 @@
             name: Forecast}, {axisId: demand_sensing.forecast_upper, id: demand_sensing.forecast_upper,
             name: Forecast Upper}, {axisId: demand_sensing.forecast_lower, id: demand_sensing.forecast_lower,
             name: Forecast Lower}], showLabels: true, showValues: true, unpinAxis: true,
-        tickDensity: default, tickDensityCustom: 5, type: linear}, {label: Retail
-          Price, orientation: right, series: [{axisId: demand_sensing.retail_price_per_unit,
-            id: demand_sensing.retail_price_per_unit, name: Retail Price Per Unit}],
-        showLabels: true, showValues: true, maxValue: !!null '', minValue: -3, valueFormat: '0[>0];[<0]',
-        unpinAxis: true, tickDensity: default, tickDensityCustom: 5, type: linear},
+        tickDensity: default, tickDensityCustom: 5, type: linear},
       {label: !!null '', orientation: right, series: [{axisId: average_of_is_promo,
             id: average_of_is_promo, name: Wholesale Promotion}], showLabels: false,
         showValues: false, maxValue: 1, minValue: 0, valueFormat: '0[>0];[<0]', unpinAxis: true,
@@ -313,25 +301,17 @@
     series_types:
       average_of_is_promo: column
     series_colors:
-      average_of_retail_price: "#80868B"
       average_of_demand_plan: "#EA4335"
       average_of_is_promo: "#cfd8de"
-      average_of_retail_price_2: "#80868B"
-      di_demand_shaping.Retail_price: "#80868B"
       demand_sensing.past_sales_quantity: "#F9AB00"
-      demand_sensing.retail_price_per_unit: "#80868B"
       demand_sensing.wholesale_quantity_measure: "#1A73E8"
       average_of_demand_plan_past: "#EA4335"
       demand_sensing.forecast: "#7CB342"
       demand_sensing.forecast_lower: "#c8de9d"
       demand_sensing.forecast_upper: "#c8de9d"
     series_labels:
-      average_of_retail_price: Retail Price per Unit ($)
       average_of_demand_plan: Demand Plan
       average_of_is_promo: Wholesale Promotion
-      di_demand_shaping.Retail_price: Retail Price Per Unit($)
-      demand_sensing.past_sales_quantity: Retail Units Sold
-      demand_sensing.retail_price_per_unit: Retail Price Per Unit
       demand_sensing.wholesale_quantity_measure: Customer Units Sold
       average_of_demand_plan_past: Demand Plan
       demand_sensing.forecast_lower: Forecast Lower Bound
