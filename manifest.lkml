@@ -1,25 +1,25 @@
 
 constant: CONNECTION_NAME {
-  value: "CONNECTION_NAME"
+  value: "cortex"
   export: override_required
 }
 
 constant: GCP_PROJECT {
-  value: "GCP Project Name"
+  value: "stabby-stabby2"
   export: override_required
 }
 
 constant: REPORTING_DATASET {
-  value: "Reporting Dataset Name"
+  value: "liverepo1"
   export: override_required
 }
 
 constant: CLIENT {
-  value: "Client ID"
+  value: "900"
   export: override_required
 }
 
 constant: years_of_past_data {
-   value: "years_of_past_data"
+   value: "5"
     export: override_required
     }
