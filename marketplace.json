@@ -3,6 +3,7 @@
   "category_label": "Models",
   "branding": {
     "image_uri": "https://marketplace-api.looker.com/block-icons/cortex_icon.png",
+     "tagline": "Google Cloud Cortex Demand Sensing provides predefined solution content to help you get started quickly with a cloud based demand sensing solution leveraging the best of our Data Cloud services like BigQuery, Vertex AI, and Looker together with SAP ERP and additional data sources like Google Trends, Weather, and more."
     },
   "constants": {
     "CONNECTION_NAME": {
