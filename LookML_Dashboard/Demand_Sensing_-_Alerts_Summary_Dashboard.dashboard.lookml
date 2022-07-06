@@ -79,7 +79,7 @@
   - name: Product Name
     title: Product Name
     type: field_filter
-    default_value: ''
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -92,7 +92,7 @@
   - name: Customer Name
     title: Customer Name
     type: field_filter
-    default_value: Bulls Eye
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -105,7 +105,7 @@
   - name: Location
     title: Location
     type: field_filter
-    default_value: Boston
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -117,8 +117,8 @@
     field: demand_sensing_summary.location
   - name: Week Range
     title: Week Range
-    type: field_filter
-    default_value: after 104 weeks ago
+    type: date_filter
+    default_value: 90 days
     allow_multiple_values: true
     required: false
     ui_config:
@@ -132,7 +132,7 @@
   - name: Alert Type
     title: Alert Type
     type: field_filter
-    default_value: ''
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:

@@ -629,7 +629,7 @@
   - name: Product Name
     title: Product Name
     type: field_filter
-    default_value: Face Cream
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -643,7 +643,7 @@
   - name: Customer
     title: Customer
     type: field_filter
-    default_value: Bulls Eye
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -657,7 +657,7 @@
   - name: Ship To Location
     title: Ship To Location
     type: field_filter
-    default_value: Boston
+    default_value:
     allow_multiple_values: true
     required: false
     ui_config:
@@ -670,8 +670,8 @@
     field: demand_sensing.location
   - name: Week Range
     title: Week Range
-    type: field_filter
-    default_value: 104 weeks ago for 117 weeks
+    type: date_filter
+    default_value: 90 days
     allow_multiple_values: true
     required: false
     ui_config:
