@@ -234,7 +234,8 @@ IF(ColdFront IS TRUE,
   --- PromoDiffrential Impact Score
 IF
   ( PromotionCalendar.IsPromo=true
-    AND (ABS(DemandPlan.Sales-Forecast.Sales)/DemandPlan.Sales) > 0.1,
+    AND (DemandPlan.Sales>Forecast.ForecastQuantityUpperBound
+      OR DemandPlan.Sales<Forecast.ForecastQuantityLowerBound),
     ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
     0) AS PromoDiffrentialImpactScore,
   ---NonSeasonalTrends Impact Score
