@@ -145,7 +145,7 @@ FROM
   HistoricalMax,
   ((InterestOverTime-HistoricalMin)/(HistoricalMax-HistoricalMin))*100 AS NormalizedScore,
   AVG(((InterestOverTime-HistoricalMin)/(HistoricalMax-HistoricalMin))*100) OVER (PARTITION BY Country, HierarchyId )AS AvgNormalizedScore,
-  AVG(((InterestOverTime-HistoricalMin)/(HistoricalMax-HistoricalMin))*100) OVER (PARTITION BY Country, HierarchyId ORDER BY Trends.Week RANGE BETWEEN 300 PRECEDING AND CURRENT ROW )AS AvgNormalizedScoreFor10Months,
+  AVG(((InterestOverTime-HistoricalMin)/(HistoricalMax-HistoricalMin))*100) OVER (PARTITION BY Country, HierarchyId ORDER BY Trends.Week RANGE BETWEEN 44 PRECEDING AND CURRENT ROW )AS AvgNormalizedScoreFor10Months,
 FROM (
   SELECT
     WeekStart,
@@ -217,7 +217,7 @@ IF(ColdFront IS TRUE,
   --- PromoDiffrential Impact Score
 IF
   ( PromotionCalendar.IsPromo=true
-    AND ((DemandPlan.Sales-Forecast.Sales)/DemandPlan.Sales) > 0.1,
+    AND (ABS(DemandPlan.Sales-Forecast.Sales)/DemandPlan.Sales) > 0.1,
     ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
     0) AS PromoDiffrentialImpactScore,
   ---NonSeasonalTrends Impact Score
@@ -226,8 +226,8 @@ IF
       OR DemandPlan.Sales<Forecast.ForecastQuantityLowerBound)
     AND Trends.Week BETWEEN Trends.Week
     AND Trends.Week+3
-    AND ((ABS(NormalizedScore-AvgNormalizedScore)/ AvgNormalizedScore)*100 >0.25),
-    ROUND((ABS(NormalizedScore-AvgNormalizedScoreFor10Months)/ AvgNormalizedScoreFor10Months)*100,2),
+    AND ((ABS(NormalizedScore-AvgNormalizedScoreFor10Months)/ AvgNormalizedScoreFor10Months)*100 > 0.25),
+    ROUND((ABS(Forecast.Sales-DemandPlan.Sales)/DemandPlan.Sales)*100,2),
     0) AS NonSeasonalTrendsImpactScore,
 
 FROM
