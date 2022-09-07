@@ -125,15 +125,15 @@ IF
       FALSE) AS ColdFront
 From
 (SELECT
-  max_temp  MaxTemp,
-  min_temp  MinTemp,
-  country Country,
-  postcode PostCode,
+  MaxTemp  MaxTemp,
+  MinTemp  MinTemp,
+  Country Country,
+  PostCode PostCode,
   date Date,
-  AVG(max_temp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMaxTemp,
-  AVG(min_temp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMinTemp,
+  AVG(MaxTemp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMaxTemp,
+  AVG(MinTemp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMinTemp,
 FROM
-   @{GCP_PROJECT}.@{REPORTING_DATASET}.weather_daily) As Weather),
+   @{GCP_PROJECT}.@{REPORTING_DATASET}.WeatherDaily) As Weather),
   Trends AS(
   SELECT
   WeekStart,
