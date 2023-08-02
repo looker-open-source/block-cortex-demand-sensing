@@ -1,16 +1,21 @@
 
 constant: CONNECTION_NAME {
-  value: "cortex-demo-thjennifer1"
+  value: "qa-thjennifer2"
   export: override_required
 }
 
 constant: GCP_PROJECT {
-  value: "thjennifer1"
+  value: "thjennifer2"
   export: override_required
 }
 
 constant: REPORTING_DATASET {
-  value: "SAP_REPORTING"
+  value: "CORTEX_SAP_REPORTING"
+  export: override_required
+}
+
+constant: K9_REPORTING_DATASET {
+  value: "CORTEX_K9_REPORTING"
   export: override_required
 }
 

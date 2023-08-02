@@ -16,6 +16,9 @@
     "REPORTING_DATASET": {
       "label": "Reporting Dataset Name"
     },
+    "K9_REPORTING_DATASET": {
+      "label": "K9 Reporting Dataset Name"
+    },
     "CLIENT": {
       "label": "SAP Client ID"
     },
