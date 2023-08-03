@@ -671,13 +671,8 @@
     title: Week Range
     type: date_filter
     default_value: 90 days
-    allow_multiple_values: true
     required: false
     ui_config:
       type: relative_timeframes
       display: inline
       options: []
-    model: cortex_demand_sensing
-    explore: demand_sensing
-    listens_to_filters: []
-    field: demand_sensing.date_date

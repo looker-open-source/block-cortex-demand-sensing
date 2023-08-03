@@ -119,16 +119,11 @@
     title: Week Range
     type: date_filter
     default_value: 90 days
-    allow_multiple_values: true
     required: false
     ui_config:
       type: relative_timeframes
       display: inline
       options: []
-    model: cortex_demand_sensing
-    explore: demand_sensing_summary
-    listens_to_filters: []
-    field: demand_sensing_summary.date_week
   - name: Alert Type
     title: Alert Type
     type: field_filter
