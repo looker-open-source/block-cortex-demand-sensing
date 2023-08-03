@@ -1,4 +1,3 @@
-
 constant: CONNECTION_NAME {
   value: "CONNECTION_NAME"
   export: override_required
