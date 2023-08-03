@@ -22,9 +22,11 @@ The related LookML Block also leverages these same datasets.
 
 - **Connection**: In the manifest.lkml file, update the value of the CONNECTION_NAME 
 
-- **GCP Project**: The GCP project name where the SAP reporting dataset resides in BigQuery (not project id).
+- **GCP Project**: The GCP project where the SAP reporting dataset resides in BigQuery (i.e. GCP project id). [Identifying Project ID](https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects).
 
 - **Reporting Dataset**: The deployed Cortex Data Foundation _REPORTING dataset where the SAP views reside within the GCP BigQuery project.
+  
+- **K9 Reporting Dataset**: The deployed Cortex Data Foundation K9_REPORTING data where the HolidayCalendar, Trends, Weather and Weather views reside within the GCP BigQuery project. If using Cortex Data Framework 4.2 and earlier, _REPORTING and K9_REPORTING constants will use the same value.
 
 - **ClientId**: Input the Client ID from the dataset.
 
@@ -35,7 +37,6 @@ The related LookML Block also leverages these same datasets.
 <h2><span style="color:#2d7eea">Additional Resources</span></h2>
 
 To learn more about LookML and how to develop visit:
-- [Looker User Guide](https://looker.com/guide)
-- [Looker Help Center](https://help.looker.com)
-- [Looker University](https://training.looker.com/)
+- [Looker Best Practices](https://cloud.google.com/looker/docs/best-practices/home)
+- [Looker/Google Cloud Training](https://www.cloudskillsboost.google/catalog)
 
