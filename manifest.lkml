@@ -1,30 +1,30 @@
 
 constant: CONNECTION_NAME {
-  value: "qa-thjennifer2"
+  value: "CONNECTION_NAME"
   export: override_required
 }
 
 constant: GCP_PROJECT {
-  value: "thjennifer2"
+  value: "GCP Project ID"
   export: override_required
 }
 
 constant: REPORTING_DATASET {
-  value: "CORTEX_SAP_REPORTING"
+  value: "Reporting Dataset Name"
   export: override_required
 }
 
 constant: K9_REPORTING_DATASET {
-  value: "CORTEX_K9_REPORTING"
+  value: "K9 Reporting Dataset Name"
   export: override_required
 }
 
 constant: CLIENT {
-  value: "900"
+  value: "Client ID"
   export: override_required
 }
 
 constant: years_of_past_data {
-   value: "1"
-   export: override_required
+  value: "years_of_past_data"
+  export: override_required
 }
