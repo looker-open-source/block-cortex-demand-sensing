@@ -132,7 +132,7 @@ From
   AVG(MaxTemp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMaxTemp,
   AVG(MinTemp) OVER(PARTITION BY postcode, extract (week from date) order by extract (week from date) RANGE BETWEEN 20 PRECEDING AND CURRENT ROW) AvgMinTemp,
 FROM
-   @{GCP_PROJECT}.@{REPORTING_DATASET}.WeatherDaily) As Weather),
+   @{GCP_PROJECT}.@{K9_REPORTING_DATASET}.WeatherDaily) As Weather),
   Trends AS(
   SELECT
   WeekStart,
@@ -157,7 +157,7 @@ FROM (
     MIN(InterestOverTime) OVER (PARTITION BY CountryCode, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMin,
     MAX(InterestOverTime) OVER (PARTITION BY CountryCode, HierarchyId, EXTRACT(WEEK FROM CAST(WeekStart AS date)) ) AS HistoricalMax
   FROM
-    `@{GCP_PROJECT}.@{REPORTING_DATASET}.Trends`)Trends
+    `@{GCP_PROJECT}.@{K9_REPORTING_DATASET}.Trends`)Trends
 WHERE
   HistoricalMin != HistoricalMax ),
 
@@ -287,9 +287,9 @@ ON
   AND Grid.product=PromotionCalendar.CatalogItemId
   AND Grid.customer=PromotionCalendar.Customerid
 LEFT JOIN
-  `@{GCP_PROJECT}.@{REPORTING_DATASET}.HolidayCalendar` HolidayCalendar
+  `@{GCP_PROJECT}.@{K9_REPORTING_DATASET}.HolidayCalendar` HolidayCalendar
 ON
   Grid.Date = HolidayCalendar.HolidayDate);;
-  interval_trigger: "3 hour"
+  # interval_trigger: "3 hour"
   }
 }

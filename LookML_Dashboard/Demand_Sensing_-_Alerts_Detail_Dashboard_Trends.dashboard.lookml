@@ -1,95 +1,10 @@
-- dashboard: demand_sensing__alerts_detail_dashboard_promo_differential
-  title: Demand Sensing - Alerts Detail Dashboard (Promo Differential)
+- dashboard: demand_sensing__alerts_detail_dashboard_trends
+  title: Demand Sensing - Alerts Detail Dashboard (Trends)
   layout: newspaper
   preferred_viewer: dashboards-next
   description: ''
-  preferred_slug: M9im3qI9R2DcCPXaVIyq8P
+  preferred_slug: 24XdrbLG4S70E0exyBf44q
   elements:
-  - title: Promo Differential
-    name: Promo Differential
-    model: cortex_demand_sensing
-    explore: demand_sensing
-    type: looker_line
-    fields: [demand_sensing.date_week, demand_sensing.wholesale_quantity_measure,
-      average_of_is_promo, average_of_demand_plan_past, demand_sensing.forecast, demand_sensing.forecast_lower,
-      demand_sensing.forecast_upper]
-    fill_fields: [demand_sensing.date_week]
-    sorts: [demand_sensing.date_week desc]
-    limit: 500
-    dynamic_fields: [{measure: average_of_demand_plan, based_on: demand_sensing.demand_plan,
-        expression: '', label: Average of Demand Plan, type: average, _kind_hint: measure,
-        _type_hint: number}, {measure: average_of_is_promo, based_on: demand_sensing.is_promo,
-        expression: '', label: Average of Is Promo, type: average, _kind_hint: measure,
-        _type_hint: number}, {measure: average_of_demand_plan_past, based_on: demand_sensing.demand_plan_past,
-        expression: '', label: Average of Demand Plan Past, type: average, _kind_hint: measure,
-        _type_hint: number}]
-    x_axis_gridlines: false
-    y_axis_gridlines: true
-    show_view_names: false
-    show_y_axis_labels: true
-    show_y_axis_ticks: true
-    y_axis_tick_density: default
-    y_axis_tick_density_custom: 5
-    show_x_axis_label: false
-    show_x_axis_ticks: true
-    y_axis_scale_mode: linear
-    x_axis_reversed: false
-    y_axis_reversed: false
-    plot_size_by_field: false
-    trellis: ''
-    stacking: ''
-    limit_displayed_rows: false
-    legend_position: center
-    point_style: none
-    show_value_labels: false
-    label_density: 25
-    x_axis_scale: auto
-    y_axis_combined: true
-    show_null_points: false
-    interpolation: linear
-    y_axes: [{label: Quantity, orientation: left, series: [{axisId: average_of_demand_plan,
-            id: average_of_demand_plan, name: Demand Plan}, {axisId: demand_sensing.wholesale_quantity_measure,
-            id: demand_sensing.wholesale_quantity_measure, name: Customer Units Sold},
-          {axisId: average_of_demand_plan_past, id: average_of_demand_plan_past, name: Average
-              of Demand Plan Past}, {axisId: demand_sensing.forecast, id: demand_sensing.forecast,
-            name: Forecast}, {axisId: demand_sensing.forecast_upper, id: demand_sensing.forecast_upper,
-            name: Forecast Upper}, {axisId: demand_sensing.forecast_lower, id: demand_sensing.forecast_lower,
-            name: Forecast Lower}], showLabels: true, showValues: true, unpinAxis: true,
-        tickDensity: default, tickDensityCustom: 5, type: linear},
-      {label: !!null '', orientation: right, series: [{axisId: average_of_is_promo,
-            id: average_of_is_promo, name: Wholesale Promotion}], showLabels: false,
-        showValues: false, maxValue: 1, minValue: 0, valueFormat: '0[>0];[<0]', unpinAxis: true,
-        tickDensity: default, tickDensityCustom: 5, type: linear}]
-    series_types:
-      average_of_is_promo: column
-    series_colors:
-      average_of_demand_plan: "#EA4335"
-      average_of_is_promo: "#cfd8de"
-      demand_sensing.past_sales_quantity: "#F9AB00"
-      demand_sensing.wholesale_quantity_measure: "#1A73E8"
-      average_of_demand_plan_past: "#EA4335"
-      demand_sensing.forecast: "#7CB342"
-      demand_sensing.forecast_lower: "#c8de9d"
-      demand_sensing.forecast_upper: "#c8de9d"
-    series_labels:
-      average_of_demand_plan: Demand Plan
-      average_of_is_promo: Wholesale Promotion
-      demand_sensing.wholesale_quantity_measure: Customer Units Sold
-      average_of_demand_plan_past: Demand Plan
-      demand_sensing.forecast_lower: Forecast Lower Bound
-      demand_sensing.forecast_upper: Forecast Upper Bound
-    x_axis_datetime_label: ''
-    defaults_version: 1
-    hidden_fields: []
-    listen:
-      Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
-      Ship To Location: demand_sensing.location
-      Week Range: demand_sensing.date_date
-    row: 0
-    col: 5
-    width: 19
-    height: 9
   - title: Google Trends Insights
     name: Google Trends Insights
     model: cortex_demand_sensing
@@ -99,10 +14,8 @@
       average_of_demand_plan, demand_sensing.forecast, demand_sensing.forecast_lower,
       demand_sensing.forecast_upper]
     fill_fields: [demand_sensing.date_week]
-    filters: {}
     sorts: [demand_sensing.date_week desc]
     limit: 500
-    column_limit: 50
     dynamic_fields: [{measure: average_of_interest_over_time, based_on: demand_sensing.interest_over_time,
         expression: '', label: Average of Interest Over Time, type: average, _kind_hint: measure,
         _type_hint: number}, {measure: average_of_demand_plan, based_on: demand_sensing.demand_plan,
@@ -135,7 +48,7 @@
     y_axes: [{label: '', orientation: left, series: [{axisId: average_of_interest_over_time,
             id: average_of_interest_over_time, name: Trend}], showLabels: true, showValues: true,
         unpinAxis: true, tickDensity: default, tickDensityCustom: 5, type: linear},
-      {label: !!null '', orientation: right, series: [ {axisId: demand_sensing.wholesale_quantity_measure,
+      {label: !!null '', orientation: right, series: [{axisId: demand_sensing.wholesale_quantity_measure,
             id: demand_sensing.wholesale_quantity_measure, name: Customer Units Sold},
           {axisId: average_of_demand_plan, id: average_of_demand_plan, name: Total
               Demand Plan}, {axisId: demand_sensing.forecast, id: demand_sensing.forecast,
@@ -162,13 +75,13 @@
     hidden_fields: []
     listen:
       Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
+      Customer: demand_sensing.customer
       Ship To Location: demand_sensing.location
       Week Range: demand_sensing.date_date
-    row: 9
-    col: 8
-    width: 8
-    height: 7
+    row: 0
+    col: 5
+    width: 19
+    height: 9
   - title: Forecast Outside Statistical Range
     name: Forecast Outside Statistical Range
     model: cortex_demand_sensing
@@ -232,11 +145,11 @@
     hidden_fields: []
     listen:
       Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
+      Customer: demand_sensing.customer
       Ship To Location: demand_sensing.location
       Week Range: demand_sensing.date_date
     row: 9
-    col: 16
+    col: 8
     width: 8
     height: 7
   - title: Temperature
@@ -320,11 +233,98 @@
     hidden_fields: []
     listen:
       Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
+      Customer: demand_sensing.customer
       Ship To Location: demand_sensing.location
       Week Range: demand_sensing.date_date
     row: 9
     col: 0
+    width: 8
+    height: 7
+  - title: Promo Differential
+    name: Promo Differential
+    model: cortex_demand_sensing
+    explore: demand_sensing
+    type: looker_line
+    fields: [demand_sensing.date_week, demand_sensing.wholesale_quantity_measure,
+      average_of_is_promo, average_of_demand_plan_past, demand_sensing.forecast, demand_sensing.forecast_lower,
+      demand_sensing.forecast_upper]
+    fill_fields: [demand_sensing.date_week]
+    filters: {}
+    sorts: [demand_sensing.date_week desc]
+    limit: 500
+    column_limit: 50
+    dynamic_fields: [{measure: average_of_demand_plan, based_on: demand_sensing.demand_plan,
+        expression: '', label: Average of Demand Plan, type: average, _kind_hint: measure,
+        _type_hint: number}, {measure: average_of_is_promo, based_on: demand_sensing.is_promo,
+        expression: '', label: Average of Is Promo, type: average, _kind_hint: measure,
+        _type_hint: number},{measure: average_of_demand_plan_past, based_on: demand_sensing.demand_plan_past,
+        expression: '', label: Average of Demand Plan Past, type: average, _kind_hint: measure,
+        _type_hint: number}]
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    show_view_names: false
+    show_y_axis_labels: true
+    show_y_axis_ticks: true
+    y_axis_tick_density: default
+    y_axis_tick_density_custom: 5
+    show_x_axis_label: false
+    show_x_axis_ticks: true
+    y_axis_scale_mode: linear
+    x_axis_reversed: false
+    y_axis_reversed: false
+    plot_size_by_field: false
+    trellis: ''
+    stacking: ''
+    limit_displayed_rows: false
+    legend_position: center
+    point_style: none
+    show_value_labels: false
+    label_density: 25
+    x_axis_scale: auto
+    y_axis_combined: true
+    show_null_points: false
+    interpolation: linear
+    y_axes: [{label: Quantity, orientation: left, series: [{axisId: average_of_demand_plan,
+            id: average_of_demand_plan, name: Demand Plan}, {axisId: demand_sensing.wholesale_quantity_measure,
+            id: demand_sensing.wholesale_quantity_measure, name: Customer Units Sold},
+          {axisId: average_of_demand_plan_past, id: average_of_demand_plan_past, name: Average
+              of Demand Plan Past}, {axisId: demand_sensing.forecast, id: demand_sensing.forecast,
+            name: Forecast}, {axisId: demand_sensing.forecast_upper, id: demand_sensing.forecast_upper,
+            name: Forecast Upper}, {axisId: demand_sensing.forecast_lower, id: demand_sensing.forecast_lower,
+            name: Forecast Lower}], showLabels: true, showValues: true, unpinAxis: true,
+        tickDensity: default, tickDensityCustom: 5, type: linear},
+      {label: !!null '', orientation: right, series: [{axisId: average_of_is_promo,
+            id: average_of_is_promo, name: Wholesale Promotion}], showLabels: false,
+        showValues: false, maxValue: 1, minValue: 0, valueFormat: '0[>0];[<0]', unpinAxis: true,
+        tickDensity: default, tickDensityCustom: 5, type: linear}]
+    series_types:
+      average_of_is_promo: column
+    series_colors:
+      average_of_demand_plan: "#EA4335"
+      average_of_is_promo: "#cfd8de"
+      demand_sensing.past_sales_quantity: "#F9AB00"
+      demand_sensing.wholesale_quantity_measure: "#1A73E8"
+      average_of_demand_plan_past: "#EA4335"
+      demand_sensing.forecast: "#7CB342"
+      demand_sensing.forecast_lower: "#c8de9d"
+      demand_sensing.forecast_upper: "#c8de9d"
+    series_labels:
+      average_of_demand_plan: Demand Plan
+      average_of_is_promo: Wholesale Promotion
+      demand_sensing.wholesale_quantity_measure: Customer Units Sold
+      average_of_demand_plan_past: Demand Plan
+      demand_sensing.forecast_lower: Forecast Lower Bound
+      demand_sensing.forecast_upper: Forecast Upper Bound
+    x_axis_datetime_label: ''
+    defaults_version: 1
+    hidden_fields: []
+    listen:
+      Product Name: demand_sensing.product_name
+      Customer: demand_sensing.customer
+      Ship To Location: demand_sensing.location
+      Week Range: demand_sensing.date_date
+    row: 9
+    col: 16
     width: 8
     height: 7
   - title: New Tile
@@ -419,7 +419,7 @@
     y_axes: []
     listen:
       Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
+      Customer: demand_sensing.customer
       Ship To Location: demand_sensing.location
       Week Range: demand_sensing.date_date
     row: 0
@@ -518,7 +518,7 @@
     y_axes: []
     listen:
       Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
+      Customer: demand_sensing.customer
       Ship To Location: demand_sensing.location
       Week Range: demand_sensing.date_date
     row: 3
@@ -531,6 +531,7 @@
     explore: demand_sensing
     type: single_value
     fields: [demand_sensing.fifty_two_week_sales_volume]
+    sorts: [demand_sensing.fifty_two_week_sales_volume desc]
     limit: 500
     custom_color_enabled: true
     show_single_value_title: true
@@ -617,7 +618,7 @@
     y_axes: []
     listen:
       Product Name: demand_sensing.product_name
-      Customer Name: demand_sensing.customer
+      Customer: demand_sensing.customer
       Ship To Location: demand_sensing.location
       Week Range: demand_sensing.date_date
     row: 6
@@ -639,8 +640,8 @@
     explore: demand_sensing
     listens_to_filters: []
     field: demand_sensing.product_name
-  - name: Customer Name
-    title: Customer Name
+  - name: Customer
+    title: Customer
     type: field_filter
     default_value:
     allow_multiple_values: true
@@ -671,13 +672,8 @@
     title: Week Range
     type: date_filter
     default_value: 90 days
-    allow_multiple_values: true
     required: false
     ui_config:
       type: relative_timeframes
       display: inline
       options: []
-    model: cortex_demand_sensing
-    explore: demand_sensing
-    listens_to_filters: []
-    field: demand_sensing.date_date
