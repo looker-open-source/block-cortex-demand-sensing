@@ -25,7 +25,7 @@ view: correlation_table_pdt {
         FROM
         Sales
         LEFT JOIN
-        `@{GCP_PROJECT}.@{REPORTING_DATASET}.Weather` AS Weather
+        `@{GCP_PROJECT}.@{K9_REPORTING_DATASET}.Weather` AS Weather
         ON
         Sales.PostalCode = Weather.PostCode
         AND Sales.date = Weather.WeekStartDate
