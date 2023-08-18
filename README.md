@@ -32,6 +32,7 @@ This LookML model can be manually installed following the steps below.
   Refer to the [Looker Docs for installing a tool from Marketplace](https://cloud.google.com/looker/docs/marketplace#installing_a_tool_from_a_git_url). Provide values for the required prompts as outlined in next section **Required Parameters**.
 
   <h4><span style="color:#2d7eea">Option B: Manual Install via Fork of this Repository</span></h4>
+  
   - [Fork this GitHub repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo#forking-a-repository)
   - [Create a blank LookML project](https://cloud.google.com/looker/docs/create-projects#creating_a_blank_project) with any name (e.g., cortex_demand_sensing)
   - [Connect the new LookML project to the forked repository](https://cloud.google.com/looker/docs/setting-up-git-connection)
