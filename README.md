@@ -29,6 +29,7 @@ The related LookML Block also leverages many of the same datasets.
 This LookML model can be manually installed following the steps below.
 
   <h4><span style="color:#2d7eea">Option A: Marketplace Install via Git</span></h4>
+  
   Refer to the [Looker Docs for installing a tool from Marketplace](https://cloud.google.com/looker/docs/marketplace#installing_a_tool_from_a_git_url). Provide values for the required prompts as outlined in next section **Required Parameters**.
 
   <h4><span style="color:#2d7eea">Option B: Manual Install via Fork of this Repository</span></h4>
