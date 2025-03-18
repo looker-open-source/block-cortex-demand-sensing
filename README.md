@@ -1,4 +1,4 @@
-**IMPORTANT: This repository will be deprecated on Mar 19, 2025. This solution will no longer be supported.** 
+**IMPORTANT: This repository is deprecated as of Mar 19, 2025. This solution will no longer be supported.** 
 
 <h1><span style="color:#2d7eea">Google Cloud Cortex Framework for SAP</span></h1>
 
