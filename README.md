@@ -1,3 +1,5 @@
+**IMPORTANT: This repository will be deprecated on Mar 19, 2025. This solution will no longer be supported.** 
+
 <h1><span style="color:#2d7eea">Google Cloud Cortex Framework for SAP</span></h1>
 
 <h2><span style="color:#2d7eea">Data Foundation Demand Sensing</span></h2>
